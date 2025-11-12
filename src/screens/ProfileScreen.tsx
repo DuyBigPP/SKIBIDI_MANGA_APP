@@ -1,15 +1,18 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { Feather } from '@expo/vector-icons';
+
+type IconName = 'settings' | 'bell' | 'download' | 'moon' | 'bar-chart-2' | 'heart' | 'book';
 
 export const ProfileScreen = () => {
-  const menuItems = [
-    { icon: '⚙️', title: 'Cài đặt', subtitle: 'Tùy chỉnh ứng dụng' },
-    { icon: '🔔', title: 'Thông báo', subtitle: 'Quản lý thông báo' },
-    { icon: '📥', title: 'Tải xuống', subtitle: 'Quản lý manga đã tải' },
-    { icon: '🌙', title: 'Giao diện', subtitle: 'Sáng / Tối' },
-    { icon: '📊', title: 'Thống kê', subtitle: 'Xem thống kê đọc truyện' },
-    { icon: '❤️', title: 'Hỗ trợ', subtitle: 'Liên hệ & phản hồi' },
-    { icon: '📖', title: 'Về chúng tôi', subtitle: 'Phiên bản 1.0.0' },
+  const menuItems: { icon: IconName; title: string; subtitle: string }[] = [
+    { icon: 'settings', title: 'Cài đặt', subtitle: 'Tùy chỉnh ứng dụng' },
+    { icon: 'bell', title: 'Thông báo', subtitle: 'Quản lý thông báo' },
+    { icon: 'download', title: 'Tải xuống', subtitle: 'Quản lý manga đã tải' },
+    { icon: 'moon', title: 'Giao diện', subtitle: 'Sáng / Tối' },
+    { icon: 'bar-chart-2', title: 'Thống kê', subtitle: 'Xem thống kê đọc truyện' },
+    { icon: 'heart', title: 'Hỗ trợ', subtitle: 'Liên hệ & phản hồi' },
+    { icon: 'book', title: 'Về chúng tôi', subtitle: 'Phiên bản 1.0.0' },
   ];
 
   return (
@@ -18,7 +21,7 @@ export const ProfileScreen = () => {
         {/* Profile Header */}
         <View className="items-center mb-6 mt-4">
           <View className="bg-primary w-24 h-24 rounded-full mb-4 items-center justify-center">
-            <Text className="text-primary-foreground text-4xl">👤</Text>
+            <Feather name="user" size={48} color="#F8FAFC" />
           </View>
           <Text className="text-2xl font-bold text-foreground mb-1">
             Người dùng
@@ -26,8 +29,9 @@ export const ProfileScreen = () => {
           <Text className="text-muted-foreground text-sm">
             user@example.com
           </Text>
-          <TouchableOpacity className="mt-4 bg-primary rounded-full px-6 py-2">
-            <Text className="text-primary-foreground font-semibold">Chỉnh sửa</Text>
+          <TouchableOpacity className="mt-4 bg-primary rounded-full px-6 py-2 flex-row items-center">
+            <Feather name="edit-2" size={16} color="#F8FAFC" />
+            <Text className="text-primary-foreground font-semibold ml-2">Chỉnh sửa</Text>
           </TouchableOpacity>
         </View>
 
@@ -54,7 +58,9 @@ export const ProfileScreen = () => {
               key={index}
               className="flex-row items-center bg-card rounded-xl p-4 mb-3 border border-border"
             >
-              <Text className="text-2xl mr-4">{item.icon}</Text>
+              <View className="w-10 h-10 bg-primary/20 rounded-full items-center justify-center mr-3">
+                <Feather name={item.icon} size={20} color="#8B5CF6" />
+              </View>
               <View className="flex-1">
                 <Text className="font-bold text-foreground text-base">
                   {item.title}
@@ -63,14 +69,15 @@ export const ProfileScreen = () => {
                   {item.subtitle}
                 </Text>
               </View>
-              <Text className="text-muted-foreground text-xl">›</Text>
+              <Feather name="chevron-right" size={20} color="#94A3B8" />
             </TouchableOpacity>
           ))}
         </View>
 
         {/* Logout Button */}
-        <TouchableOpacity className="bg-destructive/20 rounded-xl p-4 mb-8 border border-destructive/30">
-          <Text className="text-destructive font-bold text-center text-base">
+        <TouchableOpacity className="bg-destructive/20 rounded-xl p-4 mb-8 border border-destructive/30 flex-row items-center justify-center">
+          <Feather name="log-out" size={20} color="#EF4444" />
+          <Text className="text-destructive font-bold text-center text-base ml-2">
             Đăng xuất
           </Text>
         </TouchableOpacity>
