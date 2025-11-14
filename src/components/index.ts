@@ -5,3 +5,4 @@ export { Loading } from './Loading';
 export { EmptyState } from './EmptyState';
 export { BottomTabBar } from './BottomTabBar';
 export { Header } from './Header';
+export { SafeImage } from './SafeImage';

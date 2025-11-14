@@ -10,7 +10,7 @@ interface BottomTabBarProps {
 
 type IconName = 'home' | 'search' | 'book-open' | 'user';
 
-export const BottomTabBar = ({ activeTab, onTabChange }: BottomTabBarProps) => {
+export const BottomTabBar: React.FC<BottomTabBarProps> = ({ activeTab, onTabChange }) => {
   const insets = useSafeAreaInsets();
   
   const tabs: { id: string; icon: IconName; label: string }[] = [

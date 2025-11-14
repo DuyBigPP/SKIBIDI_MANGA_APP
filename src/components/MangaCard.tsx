@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { SafeImage } from './SafeImage';
 
 interface MangaCardProps {
   title: string;
@@ -23,7 +24,12 @@ export const MangaCard = ({
       {/* Cover Image */}
       <View className="bg-gray-200 rounded-xl h-56 mb-2 overflow-hidden">
         {coverImage ? (
-          <Image source={{ uri: coverImage }} className="w-full h-full" />
+          <SafeImage 
+            uri={coverImage}
+            className="w-full h-full" 
+            resizeMode="cover"
+            showLoadingIndicator={false}
+          />
         ) : (
           <View className="w-full h-full items-center justify-center">
             <Text className="text-4xl">📖</Text>
