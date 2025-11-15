@@ -235,18 +235,19 @@ export const MangaDetailScreen: React.FC<MangaDetailScreenProps> = ({
           {isAuthenticated && continueReading && !continueReadingLoading && (
             <TouchableOpacity
               onPress={() => onChapterPress(continueReading.chapter.slug)}
-              className="bg-primary rounded-xl p-4 mb-4 flex-row items-center justify-between"
+              className="bg-primary rounded-xl px-4 p-2 mb-2 flex-row items-center justify-between"
             >
-              <View className="flex-1 mr-3">
-                <Text className="text-primary-foreground font-bold text-base mb-1">
+              <View className="flex-1">
+                <Text className="text-primary-foreground font-bold text-base">
                   Tiếp tục đọc
                 </Text>
-                <Text className="text-primary-foreground/80 text-sm">
+                {/* CHUA BIET CACH FIX CAI NAY DUNG XOA!!!! */}
+                {/* <Text className="text-primary-foreground/80 text-sm">
                   {continueReading.chapter.title}
                 </Text>
                 <Text className="text-primary-foreground/60 text-xs mt-1">
                   Trang {continueReading.currentPage}/{continueReading.totalPages} • {continueReading.progressPercent}%
-                </Text>
+                </Text> */}
               </View>
               <View className="bg-primary-foreground/20 rounded-full p-2">
                 <Feather name="play-circle" size={24} color="#F8FAFC" />
