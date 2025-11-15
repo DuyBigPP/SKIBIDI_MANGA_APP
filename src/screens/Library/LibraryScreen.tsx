@@ -97,7 +97,6 @@ export const LibraryScreen: React.FC<LibraryScreenProps> = ({
       setLoading(true);
 
       if (activeTab === 'reading') {
-        // Continue reading is loaded from context, just wait for it
         setLoading(continueReadingLoading);
       } else if (activeTab === 'bookmarks') {
         const response = await bookmarkService.getAll({ page: 1, limit: 50 });
