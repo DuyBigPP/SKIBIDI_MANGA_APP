@@ -34,24 +34,28 @@ export const ReaderScreen: React.FC<ReaderScreenProps> = ({
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const scrollViewRef = useRef<ScrollView>(null);
+  const currentPageRef = useRef(1); // Track current page for cleanup
 
   useEffect(() => {
     loadChapter();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chapterSlug]);
 
+  // Update ref when page changes
   useEffect(() => {
-    // Save progress when page changes (only if authenticated)
+    currentPageRef.current = currentPage;
+  }, [currentPage]);
 
-    if (chapter && isAuthenticated && currentPage > 0) {
-      const timer = setTimeout(() => {
+  // unmount => save
+  useEffect(() => {
+    return () => {
+      if (chapter && isAuthenticated && currentPageRef.current > 0) {
         saveProgress();
-      }, 1000); // Debounce để tránh save quá nhiều
-      
-      return () => clearTimeout(timer);
-    }
+        // Alert.alert('saved', currentPageRef.current.toString());
+      }
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, chapter, isAuthenticated]);
+  }, [chapter, isAuthenticated]);
 
   const loadChapter = async () => {
     try {
@@ -74,9 +78,9 @@ export const ReaderScreen: React.FC<ReaderScreenProps> = ({
 
     try {
       await readingHistoryService.saveProgress(chapter.id, {
-        currentPage,
+        currentPage: currentPageRef.current,
         totalPages: chapter.totalImages,
-        isCompleted: currentPage === chapter.totalImages,
+        isCompleted: currentPageRef.current === chapter.totalImages,
       });
       // Alert.alert('success', chapter.id.toString() + ' ' + currentPage.toString());
     } catch (error) {

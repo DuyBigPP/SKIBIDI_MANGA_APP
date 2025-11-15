@@ -91,7 +91,7 @@ export const MangaDetailScreen: React.FC<MangaDetailScreenProps> = ({
         );
       }
     } catch (error: any) {
-      Alert.alert('Lỗi', 'Không thể cập nhật yêu thích');
+      Alert.alert('Lỗi', error);
     } finally {
       setBookmarkLoading(false);
     }
