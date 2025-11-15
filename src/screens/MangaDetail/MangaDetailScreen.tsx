@@ -194,24 +194,18 @@ export const MangaDetailScreen: React.FC<MangaDetailScreenProps> = ({
           </View>
 
           {/* Stats */}
-          <View className="flex-row items-center justify-around bg-card rounded-xl p-4 mb-4">
-            <View className="items-center">
+          <View className="flex-row items-center bg-card rounded-xl p-4 mb-4">
+            <View className="items-center flex-1">
               <Text className="text-lg font-bold text-foreground">
                 {manga.totalChapters}
               </Text>
               <Text className="text-muted-foreground text-xs">Chương</Text>
             </View>
-            <View className="items-center">
+            <View className="items-center flex-1">
               <Text className="text-lg font-bold text-foreground">
                 {manga.totalViews}
               </Text>
               <Text className="text-muted-foreground text-xs">Lượt xem</Text>
-            </View>
-            <View className="items-center">
-              <Text className="text-lg font-bold text-foreground">
-                ⭐ {manga.averageRating.toFixed(1)}
-              </Text>
-              <Text className="text-muted-foreground text-xs">Đánh giá</Text>
             </View>
           </View>
 
