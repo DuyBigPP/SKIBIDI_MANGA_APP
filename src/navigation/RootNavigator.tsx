@@ -12,6 +12,7 @@ import { LibraryScreen } from '../screens/Library/LibraryScreen';
 import { ProfileScreen } from '../screens/Profile/ProfileScreen';
 import { EditProfileScreen } from '../screens/Profile/EditProfileScreen';
 import { MangaDetailScreen } from '../screens/MangaDetail/MangaDetailScreen';
+import { MangaListScreen } from '../screens/MangaList/MangaListScreen';
 import { ReaderScreen } from '../screens/Reader/ReaderScreen';
 import { BottomTabBar } from '../components/BottomTabBar';
 import { useAuth } from '../contexts/AuthContext';
@@ -24,6 +25,7 @@ type Screen =
   | 'profile'
   | 'editProfile'
   | 'mangaDetail'
+  | 'mangaList'
   | 'reader';
 
 type NavigationState = {
@@ -93,6 +95,22 @@ export const RootNavigator: React.FC = () => {
         <MangaDetailScreen
           slug={navigationState.params?.slug}
           onChapterPress={(chapterSlug) => navigate('reader', { chapterSlug })}
+          onAuthorPress={(slug, name) => navigate('mangaList', { type: 'author', slug, name })}
+          onGenrePress={(slug, name) => navigate('mangaList', { type: 'genre', slug, name })}
+          onBack={goBack}
+        />
+      </SafeAreaView>
+    );
+  }
+
+  if (navigationState.screen === 'mangaList') {
+    return (
+      <SafeAreaView className="flex-1 bg-background" edges={['top', 'bottom']}>
+        <MangaListScreen
+          type={navigationState.params?.type}
+          slug={navigationState.params?.slug}
+          name={navigationState.params?.name}
+          onMangaPress={(slug) => navigate('mangaDetail', { slug })}
           onBack={goBack}
         />
       </SafeAreaView>

@@ -27,7 +27,7 @@ export const proxyImageUrl = (url: string): string => {
   ) {
     if (USE_BACKEND_PROXY) {
       // Use backend proxy (recommended - better performance and no rate limits)
-      return `${BASE_URL}/api/proxy-image?url=${encodeURIComponent(url)}`;
+      return `${BASE_URL}/api/upload/proxy-image?url=${encodeURIComponent(url)}`;
     } else {
       // Fallback to public CORS proxy
       return `https://corsproxy.io/?${encodeURIComponent(url)}`;

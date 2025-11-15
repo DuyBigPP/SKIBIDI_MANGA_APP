@@ -13,6 +13,7 @@ import {
   Modal,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import { RefreshCw, Check, Pause, X, Flame, Sparkles, Type, FileText, Scroll, Theater, BookOpen } from 'lucide-react-native';
 import { Manga, Genre } from '../../types/api.types';
 import { mangaService, genreService } from '../../services/api';
 import { SafeImage } from '../../components/SafeImage';
@@ -180,17 +181,17 @@ export const BrowseScreen: React.FC<BrowseScreenProps> = ({ onMangaPress }) => {
     setSearchQuery('');
   }, []);
 
-  const statusOptions: { value: StatusOption; label: string; icon: string }[] = [
-    { value: 'ONGOING', label: 'Đang ra', icon: '🔄' },
-    { value: 'COMPLETED', label: 'Hoàn thành', icon: '✅' },
-    { value: 'HIATUS', label: 'Tạm ngưng', icon: '⏸️' },
-    { value: 'CANCELLED', label: 'Đã hủy', icon: '❌' },
+  const statusOptions: { value: StatusOption; label: string; iconComponent: React.ComponentType<any> }[] = [
+    { value: 'ONGOING', label: 'Đang ra', iconComponent: RefreshCw },
+    { value: 'COMPLETED', label: 'Hoàn thành', iconComponent: Check },
+    { value: 'HIATUS', label: 'Tạm ngưng', iconComponent: Pause },
+    { value: 'CANCELLED', label: 'Đã hủy', iconComponent: X },
   ];
 
-  const sortOptions: { value: SortOption; label: string; icon: string }[] = [
-    { value: 'updatedAt', label: 'Mới cập nhật', icon: '🔥' },
-    { value: 'createdAt', label: 'Mới thêm', icon: '✨' },
-    { value: 'title', label: 'Tên A-Z', icon: '🔤' },
+  const sortOptions: { value: SortOption; label: string; iconComponent: React.ComponentType<any> }[] = [
+    { value: 'updatedAt', label: 'Mới cập nhật', iconComponent: Flame },
+    { value: 'createdAt', label: 'Mới thêm', iconComponent: Sparkles },
+    { value: 'title', label: 'Tên A-Z', iconComponent: Type },
   ];
 
   const getSelectedGenreName = () => {
@@ -357,8 +358,8 @@ export const BrowseScreen: React.FC<BrowseScreenProps> = ({ onMangaPress }) => {
               </>
             ) : (
               <View className="py-12 items-center">
-                <Text className="text-6xl mb-3">📚</Text>
-                <Text className="text-muted-foreground text-base">
+                <BookOpen size={64} color="#94A3B8" strokeWidth={1.5} />
+                <Text className="text-muted-foreground text-base mt-3">
                   Không tìm thấy manga nào
                 </Text>
                 {hasActiveFilters && (
@@ -398,7 +399,9 @@ export const BrowseScreen: React.FC<BrowseScreenProps> = ({ onMangaPress }) => {
               {/* Sort Section */}
               <View className="mb-6">
                 <Text className="text-base font-bold text-foreground mb-3">Sắp xếp</Text>
-                {sortOptions.map((option) => (
+                {sortOptions.map((option) => {
+                  const IconComponent = option.iconComponent;
+                  return (
                   <TouchableOpacity
                     key={option.value}
                     onPress={() => {
@@ -410,9 +413,9 @@ export const BrowseScreen: React.FC<BrowseScreenProps> = ({ onMangaPress }) => {
                     }`}
                   >
                     <View className="flex-row items-center">
-                      <Text className="text-2xl mr-3">{option.icon}</Text>
+                      <IconComponent size={24} color={sortBy === option.value ? '#F8FAFC' : '#8B5CF6'} strokeWidth={2} />
                       <Text
-                        className={`font-semibold ${
+                        className={`font-semibold ml-3 ${
                           sortBy === option.value ? 'text-primary-foreground' : 'text-foreground'
                         }`}
                       >
@@ -423,7 +426,7 @@ export const BrowseScreen: React.FC<BrowseScreenProps> = ({ onMangaPress }) => {
                       <Feather name="check" size={20} color="#F8FAFC" />
                     )}
                   </TouchableOpacity>
-                ))}
+                );})}
               </View>
 
               {/* Status Section */}
@@ -439,9 +442,9 @@ export const BrowseScreen: React.FC<BrowseScreenProps> = ({ onMangaPress }) => {
                   }`}
                 >
                   <View className="flex-row items-center">
-                    <Text className="text-2xl mr-3">📋</Text>
+                    <FileText size={24} color={!selectedStatus ? '#F8FAFC' : '#8B5CF6'} strokeWidth={2} />
                     <Text
-                      className={`font-semibold ${
+                      className={`font-semibold ml-3 ${
                         !selectedStatus ? 'text-primary-foreground' : 'text-foreground'
                       }`}
                     >
@@ -450,7 +453,9 @@ export const BrowseScreen: React.FC<BrowseScreenProps> = ({ onMangaPress }) => {
                   </View>
                   {!selectedStatus && <Feather name="check" size={20} color="#F8FAFC" />}
                 </TouchableOpacity>
-                {statusOptions.map((option) => (
+                {statusOptions.map((option) => {
+                  const IconComponent = option.iconComponent;
+                  return (
                   <TouchableOpacity
                     key={option.value}
                     onPress={() => {
@@ -462,9 +467,9 @@ export const BrowseScreen: React.FC<BrowseScreenProps> = ({ onMangaPress }) => {
                     }`}
                   >
                     <View className="flex-row items-center">
-                      <Text className="text-2xl mr-3">{option.icon}</Text>
+                      <IconComponent size={24} color={selectedStatus === option.value ? '#F8FAFC' : '#8B5CF6'} strokeWidth={2} />
                       <Text
-                        className={`font-semibold ${
+                        className={`font-semibold ml-3 ${
                           selectedStatus === option.value ? 'text-primary-foreground' : 'text-foreground'
                         }`}
                       >
@@ -475,7 +480,7 @@ export const BrowseScreen: React.FC<BrowseScreenProps> = ({ onMangaPress }) => {
                       <Feather name="check" size={20} color="#F8FAFC" />
                     )}
                   </TouchableOpacity>
-                ))}
+                );})}
               </View>
 
               {/* Genre Section */}
@@ -495,9 +500,9 @@ export const BrowseScreen: React.FC<BrowseScreenProps> = ({ onMangaPress }) => {
                       }`}
                     >
                       <View className="flex-row items-center">
-                        <Text className="text-2xl mr-3">🎭</Text>
+                        <Theater size={24} color={!selectedGenre ? '#F8FAFC' : '#8B5CF6'} strokeWidth={2} />
                         <Text
-                          className={`font-semibold ${
+                          className={`font-semibold ml-3 ${
                             !selectedGenre ? 'text-primary-foreground' : 'text-foreground'
                           }`}
                         >

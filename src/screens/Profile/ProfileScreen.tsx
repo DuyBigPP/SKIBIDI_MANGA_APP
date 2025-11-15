@@ -114,9 +114,13 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onLoginPress, onEd
             />
           ) : (
             <View className="bg-primary w-24 h-24 rounded-full mb-4 items-center justify-center">
-              <Text className="text-5xl text-white">
-                {user?.username ? user.username.charAt(0).toUpperCase() : '👤'}
-              </Text>
+              {user?.username ? (
+                <Text className="text-5xl text-white">
+                  {user.username.charAt(0).toUpperCase()}
+                </Text>
+              ) : (
+                <Feather name="user" size={48} color="#F8FAFC" />
+              )}
             </View>
           )}
 

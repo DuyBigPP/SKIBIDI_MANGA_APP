@@ -1,9 +1,10 @@
 import React from 'react';
 import { View, Text } from 'react-native';
+import { Inbox } from 'lucide-react-native';
 import { Button } from './Button';
 
 interface EmptyStateProps {
-  icon?: string;
+  icon?: React.ComponentType<any>;
   title: string;
   description?: string;
   actionLabel?: string;
@@ -11,7 +12,7 @@ interface EmptyStateProps {
 }
 
 export const EmptyState = ({
-  icon = '📭',
+  icon: IconComponent = Inbox,
   title,
   description,
   actionLabel,
@@ -19,7 +20,7 @@ export const EmptyState = ({
 }: EmptyStateProps) => {
   return (
     <View className="flex-1 items-center justify-center p-8">
-      <Text className="text-6xl mb-4">{icon}</Text>
+      <IconComponent size={64} color="#94A3B8" strokeWidth={1.5} />
       <Text className="text-xl font-bold text-gray-900 text-center mb-2">
         {title}
       </Text>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
+import { BookOpen } from 'lucide-react-native';
 import { SafeImage } from './SafeImage';
 
 interface MangaCardProps {
@@ -32,7 +33,7 @@ export const MangaCard = ({
           />
         ) : (
           <View className="w-full h-full items-center justify-center">
-            <Text className="text-4xl">📖</Text>
+            <BookOpen size={48} color="#94A3B8" strokeWidth={1.5} />
           </View>
         )}
       </View>

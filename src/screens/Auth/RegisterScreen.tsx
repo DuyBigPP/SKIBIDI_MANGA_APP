@@ -14,6 +14,7 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
+import { BookOpen } from 'lucide-react-native';
 import { useAuth } from '../../contexts/AuthContext';
 
 interface RegisterScreenProps {
@@ -73,8 +74,8 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
         <View className="flex-1 justify-center px-6 py-8">
           {/* Logo/Title */}
           <View className="items-center mb-8">
-            <Text className="text-4xl font-bold text-primary mb-2">📚</Text>
-            <Text className="text-3xl font-bold text-foreground">Đăng ký</Text>
+            <BookOpen size={64} color="#8B5CF6" strokeWidth={2} />
+            <Text className="text-3xl font-bold text-foreground mt-2">Đăng ký</Text>
             <Text className="text-muted-foreground mt-2">Tạo tài khoản mới</Text>
           </View>
 

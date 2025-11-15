@@ -13,6 +13,7 @@ import {
   Alert,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import { BookOpen } from 'lucide-react-native';
 import { Bookmark, ReadingHistory } from '../../types/api.types';
 import { bookmarkService, readingHistoryService } from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
@@ -132,8 +133,8 @@ export const LibraryScreen: React.FC<LibraryScreenProps> = ({
   if (!isAuthenticated) {
     return (
       <View className="flex-1 bg-background items-center justify-center p-8">
-        <Text className="text-6xl mb-4">📚</Text>
-        <Text className="text-xl font-bold text-foreground text-center mb-2">
+        <BookOpen size={64} color="#8B5CF6" strokeWidth={1.5} />
+        <Text className="text-xl font-bold text-foreground text-center mb-2 mt-4">
           Đăng nhập để sử dụng thư viện
         </Text>
         <Text className="text-base text-muted-foreground text-center mb-6">

@@ -14,6 +14,7 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
+import { BookOpen } from 'lucide-react-native';
 import { useAuth } from '../../contexts/AuthContext';
 
 interface LoginScreenProps {
@@ -61,8 +62,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         <View className="flex-1 justify-center px-6">
           {/* Logo/Title */}
           <View className="items-center mb-12">
-            <Text className="text-4xl font-bold text-primary mb-2">📚</Text>
-            <Text className="text-3xl font-bold text-foreground">SKIBIBI MANGA</Text>
+            <BookOpen size={64} color="#8B5CF6" strokeWidth={2} />
+            <Text className="text-3xl font-bold text-foreground mt-2">SKIBIBI MANGA</Text>
             <Text className="text-muted-foreground mt-2">Đọc manga mọi lúc mọi nơi</Text>
           </View>
 

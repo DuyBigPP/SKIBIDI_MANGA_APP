@@ -33,33 +33,23 @@ export const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack }) 
         return;
       }
 
-      setLoading(true);
-
-      // Launch image picker with base64 option
+      // Launch image picker
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [1, 1],
-        quality: 0.7, // Reduce quality to reduce base64 size
-        base64: true, // Get base64 directly from picker
+        quality: 1,
       });
 
       if (!result.canceled && result.assets[0]) {
         const asset = result.assets[0];
-        
-        if (asset.base64) {
-          console.log('✅ Image selected (base64 length):', asset.base64.length);
-          // Store base64 data with marker
-          setFormData({ ...formData, avatar: `NEW_IMAGE:${asset.base64}` });
-        } else {
-          Alert.alert('Lỗi', 'Không thể đọc ảnh');
-        }
+        console.log('✅ Image selected:', asset.uri);
+        // Store URI with marker to indicate new image
+        setFormData({ ...formData, avatar: `NEW_IMAGE:${asset.uri}` });
       }
     } catch (error) {
       console.error('Failed to pick image:', error);
       Alert.alert('Lỗi', 'Không thể chọn ảnh');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -75,17 +65,27 @@ export const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack }) 
       const isNewImage = formData.avatar?.startsWith('NEW_IMAGE:');
       
       if (isNewImage) {
-        // Extract the base64 data
-        const base64Data = formData.avatar.replace('NEW_IMAGE:', '');
+        // Extract the image URI
+        const imageUri = formData.avatar.replace('NEW_IMAGE:', '');
         
-        console.log('📤 Uploading image (base64 length):', base64Data.length);
+        console.log('📤 Uploading image via FormData:', imageUri);
         
-        // Send via JSON with base64 string (backend will handle Cloudinary upload)
-        await authService.updateProfile({
-          username: formData.username.trim(),
-          bio: formData.bio.trim() || null,
-          avatar: base64Data, // Send raw base64 string
-        });
+        // Create FormData with image file
+        const uploadFormData = new FormData();
+        uploadFormData.append('username', formData.username.trim());
+        if (formData.bio.trim()) {
+          uploadFormData.append('bio', formData.bio.trim());
+        }
+        
+        // Append image file
+        uploadFormData.append('image', {
+          uri: imageUri,
+          name: 'avatar.jpg',
+          type: 'image/jpeg',
+        } as any);
+        
+        // Send via FormData with multipart
+        await authService.updateProfileWithAvatar(uploadFormData);
       } else {
         // No new image, just update text fields or keep existing avatar URL
         console.log('📝 Updating profile without new image');
@@ -145,7 +145,7 @@ export const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack }) 
                 <Image
                   source={{ 
                     uri: formData.avatar.startsWith('NEW_IMAGE:')
-                      ? `data:image/jpeg;base64,${formData.avatar.replace('NEW_IMAGE:', '')}` // New image preview
+                      ? formData.avatar.replace('NEW_IMAGE:', '') // New image preview (local URI)
                       : formData.avatar.startsWith('http')
                         ? formData.avatar // Cloudinary URL
                         : `data:image/jpeg;base64,${formData.avatar}` // Base64 from DB
@@ -155,9 +155,13 @@ export const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack }) 
                 />
               ) : (
                 <View className="w-32 h-32 rounded-full bg-primary items-center justify-center">
-                  <Text className="text-6xl text-white">
-                    {formData.username ? formData.username.charAt(0).toUpperCase() : '👤'}
-                  </Text>
+                  {formData.username ? (
+                    <Text className="text-6xl text-white">
+                      {formData.username.charAt(0).toUpperCase()}
+                    </Text>
+                  ) : (
+                    <Feather name="user" size={56} color="#F8FAFC" />
+                  )}
                 </View>
               )}
               

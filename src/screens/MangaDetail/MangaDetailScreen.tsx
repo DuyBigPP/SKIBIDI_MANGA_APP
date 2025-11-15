@@ -16,17 +16,22 @@ import { mangaService, bookmarkService } from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
 import { useReading } from '../../contexts/ReadingContext';
 import { Feather } from '@expo/vector-icons';
+import { Heart } from 'lucide-react-native';
 import { SafeImage } from '../../components/SafeImage';
 
 interface MangaDetailScreenProps {
   slug: string;
   onChapterPress: (chapterSlug: string) => void;
+  onAuthorPress?: (slug: string, name: string) => void;
+  onGenrePress?: (slug: string, name: string) => void;
   onBack: () => void;
 }
 
 export const MangaDetailScreen: React.FC<MangaDetailScreenProps> = ({
   slug,
   onChapterPress,
+  onAuthorPress,
+  onGenrePress,
   onBack,
 }) => {
   const { isAuthenticated } = useAuth();
@@ -183,7 +188,7 @@ export const MangaDetailScreen: React.FC<MangaDetailScreenProps> = ({
               {bookmarkLoading ? (
                 <ActivityIndicator size="small" color="#F8FAFC" />
               ) : (
-                <Text className="text-2xl">{isBookmarked ? '❤️' : '🤍'}</Text>
+                <Heart size={24} color="#F8FAFC" fill={isBookmarked ? '#F8FAFC' : 'transparent'} strokeWidth={2} />
               )}
             </TouchableOpacity>
           </View>
@@ -247,9 +252,13 @@ export const MangaDetailScreen: React.FC<MangaDetailScreenProps> = ({
               </Text>
               <View className="flex-row flex-wrap">
                 {manga.authors.map((author) => (
-                  <View key={author.id} className="bg-card rounded-full px-3 py-1 mr-2 mb-2">
+                  <TouchableOpacity
+                    key={author.id}
+                    onPress={() => onAuthorPress?.(author.slug, author.name)}
+                    className="bg-card rounded-full px-3 py-1 mr-2 mb-2 border border-border"
+                  >
                     <Text className="text-foreground text-sm">{author.name}</Text>
-                  </View>
+                  </TouchableOpacity>
                 ))}
               </View>
             </View>
@@ -263,12 +272,13 @@ export const MangaDetailScreen: React.FC<MangaDetailScreenProps> = ({
               </Text>
               <View className="flex-row flex-wrap">
                 {manga.genres.map((genre) => (
-                  <View
+                  <TouchableOpacity
                     key={genre.id}
+                    onPress={() => onGenrePress?.(genre.slug, genre.name)}
                     className="bg-primary/20 border border-primary/30 rounded-full px-3 py-1 mr-2 mb-2"
                   >
                     <Text className="text-primary text-sm">{genre.name}</Text>
-                  </View>
+                  </TouchableOpacity>
                 ))}
               </View>
             </View>
