@@ -42,6 +42,7 @@ export const ReaderScreen: React.FC<ReaderScreenProps> = ({
 
   useEffect(() => {
     // Save progress when page changes (only if authenticated)
+
     if (chapter && isAuthenticated && currentPage > 0) {
       const timer = setTimeout(() => {
         saveProgress();
@@ -77,6 +78,7 @@ export const ReaderScreen: React.FC<ReaderScreenProps> = ({
         totalPages: chapter.totalImages,
         isCompleted: currentPage === chapter.totalImages,
       });
+      // Alert.alert('success', chapter.id.toString() + ' ' + currentPage.toString());
     } catch (error) {
       console.error('Failed to save progress:', error);
     }

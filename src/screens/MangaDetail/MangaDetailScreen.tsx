@@ -265,8 +265,10 @@ export const MangaDetailScreen: React.FC<MangaDetailScreenProps> = ({
                 >
                   <View className="flex-1">
                     <Text className="text-foreground font-semibold mb-1">
-                      Chapter {chapter.chapterNumber}
-                      {chapter.title && `: ${chapter.title}`}
+                      {/* tempfix */}
+                      {/* Chapter {chapter.chapterNumber} */}
+                      {/* {chapter.title && `: ${chapter.title}`} */}
+                      {chapter.title}
                     </Text>
                     <Text className="text-muted-foreground text-xs">
                       {new Date(chapter.publishedAt).toLocaleDateString('vi-VN')}
