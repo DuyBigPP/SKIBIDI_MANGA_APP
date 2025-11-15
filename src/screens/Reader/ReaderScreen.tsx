@@ -34,7 +34,9 @@ export const ReaderScreen: React.FC<ReaderScreenProps> = ({
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const scrollViewRef = useRef<ScrollView>(null);
-  const currentPageRef = useRef(1); // Track current page for cleanup
+  const currentPageRef = useRef(1);
+  const savedPageRef = useRef<number | null>(null);
+  const hasScrolledToSavedPage = useRef(false);
 
   useEffect(() => {
     loadChapter();
@@ -51,7 +53,7 @@ export const ReaderScreen: React.FC<ReaderScreenProps> = ({
     return () => {
       if (chapter && isAuthenticated && currentPageRef.current > 0) {
         saveProgress();
-        // Alert.alert('saved', currentPageRef.current.toString());
+        Alert.alert('saved', currentPageRef.current.toString());
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -60,16 +62,52 @@ export const ReaderScreen: React.FC<ReaderScreenProps> = ({
   const loadChapter = async () => {
     try {
       setLoading(true);
+      hasScrolledToSavedPage.current = false;
+      savedPageRef.current = null;
       const response = await chapterService.getBySlug(chapterSlug);
       
       if (response.success && response.data) {
         setChapter(response.data);
+
+        if (isAuthenticated) {
+          await loadSavedProgress(response.data);
+        }
       }
     } catch (error: any) {
       Alert.alert('Lỗi', 'Không thể tải chương');
       console.error(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadSavedProgress = async (chapterData: Chapter) => {
+    try {
+      const response = await readingHistoryService.getProgress(chapterData.manga.id);
+      
+      if (response.success && response.data?.lastRead?.chapterId === chapterData.id) {
+        const savedPage = response.data.lastRead.currentPage;
+        savedPageRef.current = savedPage;
+        setCurrentPage(savedPage);
+        currentPageRef.current = savedPage;
+      }
+    } catch (error) {
+      console.error('Failed to load saved progress:', error);
+    }
+  };
+
+  const handleContentSizeChange = () => {
+    // content ready
+    if (savedPageRef.current && !hasScrolledToSavedPage.current && chapter) {
+      const imageHeight = SCREEN_HEIGHT;
+      const scrollY = (savedPageRef.current) * imageHeight;
+      
+      // layout already done, no setTimeout
+      scrollViewRef.current?.scrollTo({
+          y: scrollY,
+          animated: true,
+      });
+      hasScrolledToSavedPage.current = true;
     }
   };
 
@@ -147,6 +185,7 @@ export const ReaderScreen: React.FC<ReaderScreenProps> = ({
         onScroll={handleScroll}
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
+        onContentSizeChange={handleContentSizeChange}
       >
         {chapter.images.map((imageUrl, index) => (
           <View key={index} className="w-full">

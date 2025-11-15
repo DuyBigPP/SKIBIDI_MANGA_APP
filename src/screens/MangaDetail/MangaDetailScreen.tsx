@@ -11,8 +11,8 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import { MangaDetail, ChapterSummary } from '../../types/api.types';
-import { mangaService, bookmarkService } from '../../services/api';
+import { MangaDetail, ChapterSummary, ReadingHistory } from '../../types/api.types';
+import { mangaService, bookmarkService, readingHistoryService } from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
 import { Feather } from '@expo/vector-icons';
 import { SafeImage } from '../../components/SafeImage';
@@ -33,10 +33,16 @@ export const MangaDetailScreen: React.FC<MangaDetailScreenProps> = ({
   const [loading, setLoading] = useState(true);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [bookmarkLoading, setBookmarkLoading] = useState(false);
+  const [continueReading, setContinueReading] = useState<ReadingHistory | null>(null);
+  const [continueReadingLoading, setContinueReadingLoading] = useState(false);
 
   useEffect(() => {
     loadMangaDetail();
-  }, [slug]);
+    if (isAuthenticated) {
+      loadContinueReading();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug, isAuthenticated]);
 
   const loadMangaDetail = async () => {
     try {
@@ -56,6 +62,26 @@ export const MangaDetailScreen: React.FC<MangaDetailScreenProps> = ({
       console.error(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadContinueReading = async () => {
+    if (!isAuthenticated) return;
+    
+    try {
+      setContinueReadingLoading(true);
+      const response = await readingHistoryService.getContinueReading();
+      
+      if (response.success && response.data) {
+        const mangaHistory = response.data.find(
+          (history) => history.manga.slug === slug
+        );
+        setContinueReading(mangaHistory || null);
+      }
+    } catch (error) {
+      console.error('Failed to load continue reading:', error);
+    } finally {
+      setContinueReadingLoading(false);
     }
   };
 
@@ -204,6 +230,35 @@ export const MangaDetailScreen: React.FC<MangaDetailScreenProps> = ({
               <Text className="text-muted-foreground text-xs">Đánh giá</Text>
             </View>
           </View>
+
+          {/* Continue Reading */}
+          {isAuthenticated && continueReading && !continueReadingLoading && (
+            <TouchableOpacity
+              onPress={() => onChapterPress(continueReading.chapter.slug)}
+              className="bg-primary rounded-xl p-4 mb-4 flex-row items-center justify-between"
+            >
+              <View className="flex-1 mr-3">
+                <Text className="text-primary-foreground font-bold text-base mb-1">
+                  Tiếp tục đọc
+                </Text>
+                <Text className="text-primary-foreground/80 text-sm">
+                  {continueReading.chapter.title}
+                </Text>
+                <Text className="text-primary-foreground/60 text-xs mt-1">
+                  Trang {continueReading.currentPage}/{continueReading.totalPages} • {continueReading.progressPercent}%
+                </Text>
+              </View>
+              <View className="bg-primary-foreground/20 rounded-full p-2">
+                <Feather name="play-circle" size={24} color="#F8FAFC" />
+              </View>
+            </TouchableOpacity>
+          )}
+
+          {continueReadingLoading && (
+            <View className="bg-card rounded-xl p-4 mb-4 items-center justify-center">
+              <ActivityIndicator size="small" color="#8B5CF6" />
+            </View>
+          )}
 
           {/* Authors */}
           {manga.authors.length > 0 && (
