@@ -15,6 +15,7 @@ import {
 import { Chapter } from '../../types/api.types';
 import { chapterService, readingHistoryService } from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
+import { useReading } from '../../contexts/ReadingContext';
 import { Feather } from '@expo/vector-icons';
 import { SafeImage } from '../../components/SafeImage';
 
@@ -30,6 +31,7 @@ export const ReaderScreen: React.FC<ReaderScreenProps> = ({
   onBack,
 }) => {
   const { isAuthenticated } = useAuth();
+  const { refresh: refreshContinueReading } = useReading();
   const [chapter, setChapter] = useState<Chapter | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -48,16 +50,24 @@ export const ReaderScreen: React.FC<ReaderScreenProps> = ({
     currentPageRef.current = currentPage;
   }, [currentPage]);
 
-  // unmount => save
+  // unmount => save progress
   useEffect(() => {
     return () => {
       if (chapter && isAuthenticated && currentPageRef.current > 0) {
         saveProgress();
-        Alert.alert('saved', currentPageRef.current.toString());
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chapter, isAuthenticated]);
+
+  const handleBack = () => {
+    if (chapter && isAuthenticated && currentPageRef.current > 0) {
+      saveProgress().then(() => {
+        refreshContinueReading();
+      });
+    }
+    onBack();
+  };
 
   const loadChapter = async () => {
     try {
@@ -151,7 +161,7 @@ export const ReaderScreen: React.FC<ReaderScreenProps> = ({
     return (
       <View className="flex-1 bg-background items-center justify-center p-4">
         <Text className="text-foreground text-lg mb-4">Không tìm thấy chương</Text>
-        <TouchableOpacity onPress={onBack} className="bg-primary rounded-xl px-6 py-3">
+        <TouchableOpacity onPress={handleBack} className="bg-primary rounded-xl px-6 py-3">
           <Text className="text-primary-foreground font-semibold">Quay lại</Text>
         </TouchableOpacity>
       </View>
@@ -162,7 +172,7 @@ export const ReaderScreen: React.FC<ReaderScreenProps> = ({
     <View className="flex-1 bg-black">
       {/* Header */}
       <View className="absolute top-0 left-0 right-0 z-10 bg-black/80 p-4 flex-row items-center">
-        <TouchableOpacity onPress={onBack} className="mr-3">
+        <TouchableOpacity onPress={handleBack} className="mr-3">
           <Feather name="arrow-left" size={24} color="#FFFFFF" />
         </TouchableOpacity>
         <View className="flex-1">
@@ -206,7 +216,7 @@ export const ReaderScreen: React.FC<ReaderScreenProps> = ({
           <Text className="text-muted-foreground text-center mb-6">
             Bạn đã đọc xong Chapter {chapter.chapterNumber}
           </Text>
-          <TouchableOpacity onPress={onBack} className="bg-primary rounded-xl px-8 py-3">
+          <TouchableOpacity onPress={handleBack} className="bg-primary rounded-xl px-8 py-3">
             <Text className="text-primary-foreground font-semibold">
               Quay lại
             </Text>

@@ -16,6 +16,7 @@ import { Feather } from '@expo/vector-icons';
 import { Bookmark, ReadingHistory } from '../../types/api.types';
 import { bookmarkService, readingHistoryService } from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
+import { useReading } from '../../contexts/ReadingContext';
 import { SafeImage } from '../../components/SafeImage';
 
 interface LibraryScreenProps {
@@ -32,8 +33,8 @@ export const LibraryScreen: React.FC<LibraryScreenProps> = ({
   onLoginPress,
 }) => {
   const { isAuthenticated } = useAuth();
+  const { readingList, loading: continueReadingLoading, refresh: refreshContinueReading } = useReading();
   const [activeTab, setActiveTab] = useState<TabType>('reading');
-  const [continueReading, setContinueReading] = useState<ReadingHistory[]>([]);
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [history, setHistory] = useState<ReadingHistory[]>([]);
   const [loading, setLoading] = useState(true);
@@ -69,13 +70,13 @@ export const LibraryScreen: React.FC<LibraryScreenProps> = ({
               if (response.success) {
                 // Clear local data immediately
                 setHistory([]);
-                setContinueReading([]);
                 setLoadedTabs(new Set());
+                await refreshContinueReading();
                 
                 Alert.alert('Thành công', 'Đã xóa lịch sử đọc');
                 
                 // Reload data
-                if (activeTab === 'reading' || activeTab === 'history') {
+                if (activeTab === 'history') {
                   loadLibraryData();
                 }
               } else {
@@ -96,10 +97,8 @@ export const LibraryScreen: React.FC<LibraryScreenProps> = ({
       setLoading(true);
 
       if (activeTab === 'reading') {
-        const response = await readingHistoryService.getContinueReading();
-        if (response.success) {
-          setContinueReading(response.data);
-        }
+        // Continue reading is loaded from context, just wait for it
+        setLoading(continueReadingLoading);
       } else if (activeTab === 'bookmarks') {
         const response = await bookmarkService.getAll({ page: 1, limit: 50 });
         if (response.success) {
@@ -124,7 +123,11 @@ export const LibraryScreen: React.FC<LibraryScreenProps> = ({
 
   const onRefresh = () => {
     setRefreshing(true);
-    loadLibraryData();
+    if (activeTab === 'reading') {
+      refreshContinueReading().finally(() => setRefreshing(false));
+    } else {
+      loadLibraryData();
+    }
   };
 
   if (!isAuthenticated) {
@@ -209,8 +212,8 @@ export const LibraryScreen: React.FC<LibraryScreenProps> = ({
             {/* Continue Reading */}
             {activeTab === 'reading' && (
               <View>
-                {continueReading.length > 0 ? (
-                  continueReading.map((item) => (
+                {readingList.length > 0 ? (
+                  readingList.map((item) => (
                     <TouchableOpacity
                       key={item.id}
                       onPress={() => onChapterPress(item.chapter.slug)}

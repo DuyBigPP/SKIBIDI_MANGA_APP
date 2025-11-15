@@ -11,9 +11,10 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import { MangaDetail, ChapterSummary, ReadingHistory } from '../../types/api.types';
-import { mangaService, bookmarkService, readingHistoryService } from '../../services/api';
+import { MangaDetail, ChapterSummary } from '../../types/api.types';
+import { mangaService, bookmarkService } from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
+import { useReading } from '../../contexts/ReadingContext';
 import { Feather } from '@expo/vector-icons';
 import { SafeImage } from '../../components/SafeImage';
 
@@ -29,18 +30,16 @@ export const MangaDetailScreen: React.FC<MangaDetailScreenProps> = ({
   onBack,
 }) => {
   const { isAuthenticated } = useAuth();
+  const { getReading, loading: continueReadingLoading } = useReading();
   const [manga, setManga] = useState<MangaDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [bookmarkLoading, setBookmarkLoading] = useState(false);
-  const [continueReading, setContinueReading] = useState<ReadingHistory | null>(null);
-  const [continueReadingLoading, setContinueReadingLoading] = useState(false);
+
+  const continueReading = getReading(slug);
 
   useEffect(() => {
     loadMangaDetail();
-    if (isAuthenticated) {
-      loadContinueReading();
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug, isAuthenticated]);
 
@@ -62,26 +61,6 @@ export const MangaDetailScreen: React.FC<MangaDetailScreenProps> = ({
       console.error(error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const loadContinueReading = async () => {
-    if (!isAuthenticated) return;
-    
-    try {
-      setContinueReadingLoading(true);
-      const response = await readingHistoryService.getContinueReading();
-      
-      if (response.success && response.data) {
-        const mangaHistory = response.data.find(
-          (history) => history.manga.slug === slug
-        );
-        setContinueReading(mangaHistory || null);
-      }
-    } catch (error) {
-      console.error('Failed to load continue reading:', error);
-    } finally {
-      setContinueReadingLoading(false);
     }
   };
 
@@ -241,13 +220,12 @@ export const MangaDetailScreen: React.FC<MangaDetailScreenProps> = ({
                 <Text className="text-primary-foreground font-bold text-base">
                   Tiếp tục đọc
                 </Text>
-                {/* CHUA BIET CACH FIX CAI NAY DUNG XOA!!!! */}
-                {/* <Text className="text-primary-foreground/80 text-sm">
+                <Text className="text-primary-foreground/80 text-sm">
                   {continueReading.chapter.title}
                 </Text>
                 <Text className="text-primary-foreground/60 text-xs mt-1">
                   Trang {continueReading.currentPage}/{continueReading.totalPages} • {continueReading.progressPercent}%
-                </Text> */}
+                </Text>
               </View>
               <View className="bg-primary-foreground/20 rounded-full p-2">
                 <Feather name="play-circle" size={24} color="#F8FAFC" />

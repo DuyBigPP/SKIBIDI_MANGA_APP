@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AuthProvider } from './src/contexts/AuthContext';
+import { ReadingProvider } from './src/contexts/ReadingContext';
 import { RootNavigator } from './src/navigation/RootNavigator';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { useEffect, useState } from 'react';
@@ -33,8 +34,10 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <AuthProvider>
-        <RootNavigator />
-        <StatusBar style="light" />
+        <ReadingProvider>
+          <RootNavigator />
+          <StatusBar style="light" />
+        </ReadingProvider>
       </AuthProvider>
     </SafeAreaProvider>
   );
