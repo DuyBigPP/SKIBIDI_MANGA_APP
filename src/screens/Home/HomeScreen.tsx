@@ -89,7 +89,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onMangaPress }) => {
         <View className="mb-6">
           <Text className="text-3xl font-bold text-foreground">SKIBIDIMANGA</Text>
           <Text className="text-base text-muted-foreground mt-2">
-            APP MANGA LẬU XỊN NHẤT THẾ GIỚI 
+            APP MANGA LẬU XỊN NHẤT THẾ GIỚI 🐧
           </Text>
         </View>
 
