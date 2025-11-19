@@ -11,6 +11,7 @@ import {
   TextInput,
   ActivityIndicator,
   Modal,
+  Alert,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { RefreshCw, Check, Pause, X, Flame, Sparkles, Type, FileText, Scroll, Theater, BookOpen } from 'lucide-react-native';
@@ -38,6 +39,7 @@ export const BrowseScreen: React.FC<BrowseScreenProps> = ({ onMangaPress }) => {
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [randomLoading, setRandomLoading] = useState(false);
   
   const searchTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
   const isInitialMount = useRef(true);
@@ -181,6 +183,22 @@ export const BrowseScreen: React.FC<BrowseScreenProps> = ({ onMangaPress }) => {
     setSearchQuery('');
   }, []);
 
+  const handleRandomManga = async () => {
+    try {
+      setRandomLoading(true);
+      const response = await mangaService.getRandom();
+      if (response.success && response.data && response.data.length > 0) {
+        const randomManga = response.data[0];
+        onMangaPress(randomManga.slug);
+      }
+    } catch (error) {
+      console.error('Failed to get random manga:', error);
+      Alert.alert('Lỗi', 'Không thể lấy manga ngẫu nhiên');
+    } finally {
+      setRandomLoading(false);
+    }
+  };
+
   const statusOptions: { value: StatusOption; label: string; iconComponent: React.ComponentType<any> }[] = [
     { value: 'ONGOING', label: 'Đang ra', iconComponent: RefreshCw },
     { value: 'COMPLETED', label: 'Hoàn thành', iconComponent: Check },
@@ -258,6 +276,25 @@ export const BrowseScreen: React.FC<BrowseScreenProps> = ({ onMangaPress }) => {
               )}
             </TouchableOpacity>
           </View>
+
+          {/* Random Manga Button */}
+          <TouchableOpacity
+            onPress={handleRandomManga}
+            disabled={randomLoading}
+            className="mb-4 bg-primary rounded-xl p-3 flex-row items-center self-start"
+          >
+            {randomLoading ? (
+              <ActivityIndicator size="small" color="#F8FAFC" />
+            ) : (
+              <>
+                <Feather name="shuffle" size={18} color="#F8FAFC" />
+                <View className="ml-2">
+                  <Text className="text-white text-xs opacity-80">Không biết đọc gì?</Text>
+                  <Text className="text-white font-semibold text-sm">Manga ngẫu nhiên</Text>
+                </View>
+              </>
+            )}
+          </TouchableOpacity>
 
           {/* Active Filters Display */}
           {hasActiveFilters && (
