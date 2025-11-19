@@ -159,9 +159,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onMangaPress }) => {
         <View className="mb-6">
           <View className="flex-row items-center justify-between mb-3">
             <Text className="text-xl font-bold text-foreground">Thịnh hành hôm nay</Text>
-            <TouchableOpacity>
+            {/* <TouchableOpacity>
               <Text className="text-primary font-semibold">Xem tất cả</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
 
           {loading ? (
