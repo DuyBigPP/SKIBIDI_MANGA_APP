@@ -243,8 +243,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onMangaPress }) => {
                     </Text>
                     {manga.latestChapter && (
                       <Text className="text-muted-foreground text-sm mb-1">
-                        Chapter {manga.latestChapter.chapterNumber}
-                        {manga.latestChapter.title && `: ${manga.latestChapter.title}`}
+                        {/* Chapter {manga.latestChapter.chapterNumber} */}
+                        {/* {manga.latestChapter.title && `: ${manga.latestChapter.title}`} */}
+                        {manga.latestChapter.title}
                       </Text>
                     )}
                     <Text className="text-muted-foreground/70 text-xs">
