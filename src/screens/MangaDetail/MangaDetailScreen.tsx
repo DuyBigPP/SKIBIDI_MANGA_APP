@@ -210,7 +210,7 @@ export const MangaDetailScreen: React.FC<MangaDetailScreenProps> = ({
           </View>
 
           {/* Continue Reading */}
-          {isAuthenticated && continueReading && !continueReadingLoading && (
+          {isAuthenticated && continueReading && !continueReadingLoading && !continueReading.isCompleted &&(
             <TouchableOpacity
               onPress={() => onChapterPress(continueReading.chapter.slug)}
               className="bg-primary rounded-xl px-4 p-2 mb-2 flex-row items-center justify-between"
