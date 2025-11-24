@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "manga-skibidi",
-    "slug": "manga-skibidi",
+    "name": "skibidi manga",
+    "slug": "skibidi-manga",
     "version": "1.0.0",
     "web": {
       "favicon": "./assets/favicon.png"
@@ -33,9 +33,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "731ef557-93c6-48fa-afec-a2ee2acad6b6"
+        "projectId": "2586050f-1a1e-47c6-8a3b-7f17c64f5d36"
       }
     },
-    "owner": "pta05"
+    "owner": "skibidi-corp"
   }
 }
