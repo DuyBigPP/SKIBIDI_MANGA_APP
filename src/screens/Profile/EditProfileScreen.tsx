@@ -76,7 +76,7 @@ export const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack }) 
         // Extract the image URI
         const imageUri = formData.avatar.replace('NEW_IMAGE:', '');
         
-        console.log('📤 Uploading image via FormData:', imageUri);
+        console.log('Uploading image via FormData:', imageUri);
         
         // Create FormData with image file
         const uploadFormData = new FormData();
@@ -96,7 +96,7 @@ export const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack }) 
         await authService.updateProfileWithAvatar(uploadFormData);
       } else {
         // No new image, just update text fields or keep existing avatar URL
-        console.log('📝 Updating profile without new image');
+        console.log('Updating profile without new image');
         await authService.updateProfile({
           username: formData.username.trim(),
           bio: formData.bio.trim() || null,
@@ -111,7 +111,7 @@ export const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack }) 
         { text: 'OK', onPress: onBack }
       ]);
     } catch (error: any) {
-      console.error('❌ Failed to update profile:', error);
+      console.error('Failed to update profile:', error);
       Alert.alert('Lỗi', error.message || 'Không thể cập nhật thông tin');
     } finally {
       setLoading(false);

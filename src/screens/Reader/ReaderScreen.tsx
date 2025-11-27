@@ -3,21 +3,20 @@
  */
 
 import React, { useEffect, useState, useRef } from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  ActivityIndicator,
-  Alert,
-  Image,
-  useWindowDimensions,
-} from 'react-native';
+import { View, ScrollView, Alert } from 'react-native';
 import { Chapter } from '../../types/api.types';
 import { chapterService, readingHistoryService } from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
 import { useReading } from '../../contexts/ReadingContext';
-import { Feather } from '@expo/vector-icons';
+import {
+  LoadingView,
+  NotFoundView,
+  ReaderHeader,
+  ImageList,
+  EndOfChapter,
+  BottomNavigation,
+  ScrollToTopButton,
+} from './components';
 
 interface ReaderScreenProps {
   chapterSlug: string;
@@ -30,7 +29,6 @@ export const ReaderScreen: React.FC<ReaderScreenProps> = ({
 }) => {
   const { isAuthenticated } = useAuth();
   const { refresh: refreshContinueReading } = useReading();
-  const { width: screenWidth } = useWindowDimensions();
   const [chapter, setChapter] = useState<Chapter | null>(null);
   const [allChapters, setAllChapters] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -252,81 +250,28 @@ export const ReaderScreen: React.FC<ReaderScreenProps> = ({
   };
 
   if (loading) {
-    return (
-      <View className="flex-1 bg-black items-center justify-center">
-        <ActivityIndicator size="large" color="#8B5CF6" />
-        <Text className="text-white mt-4">Đang tải chương...</Text>
-      </View>
-    );
+    return <LoadingView />;
   }
 
   if (!chapter) {
-    return (
-      <View className="flex-1 bg-background items-center justify-center p-4">
-        <Text className="text-foreground text-lg mb-4">Không tìm thấy chương</Text>
-        <TouchableOpacity onPress={handleBack} className="bg-primary rounded-xl px-6 py-3">
-          <Text className="text-primary-foreground font-semibold">Quay lại</Text>
-        </TouchableOpacity>
-      </View>
-    );
+    return <NotFoundView onBack={handleBack} />;
   }
 
   return (
     <View className="flex-1 bg-black">
-      {/* Header with Chapter Dropdown */}
-      <View className="absolute top-0 left-0 right-0 z-20 bg-black/80">
-        <View className="p-4 flex-row items-center">
-          <TouchableOpacity onPress={handleBack} className="mr-3">
-            <Feather name="arrow-left" size={24} color="#FFFFFF" />
-          </TouchableOpacity>
-          <TouchableOpacity 
-            className="flex-1 flex-row items-center"
-            onPress={() => setShowChapterDropdown(!showChapterDropdown)}
-          >
-            <View className="flex-1">
-              <Text className="text-white font-bold" numberOfLines={1}>
-                {chapter.manga.title}
-              </Text>
-              <Text className="text-gray-400 text-sm">
-                Chapter {chapter.chapterNumber}
-                {chapter.title && `: ${chapter.title}`}
-              </Text>
-            </View>
-            <Feather name={showChapterDropdown ? "chevron-up" : "chevron-down"} size={20} color="#FFFFFF" />
-          </TouchableOpacity>
-          <Text className="text-white text-sm ml-3">
-            {allChapters.length - getCurrentChapterIndex()} / {allChapters.length}
-          </Text>
-        </View>
-
-        {/* Chapter Dropdown */}
-        {showChapterDropdown && (
-          <ScrollView 
-            className="bg-black/95 max-h-80 border-t border-gray-700"
-            showsVerticalScrollIndicator={true}
-          >
-            {allChapters.map((ch) => (
-              <TouchableOpacity
-                key={ch.id}
-                onPress={() => goToChapter(ch.slug)}
-                className={`p-4 border-b border-gray-800 ${
-                  ch.id === chapter.id ? 'bg-primary/20' : ''
-                }`}
-              >
-                <Text className={`text-sm font-semibold ${
-                  ch.id === chapter.id ? 'text-primary' : 'text-white'
-                }`}>
-                  Chapter {ch.chapterNumber}
-                  {ch.title && `: ${ch.title}`}
-                </Text>
-                <Text className="text-gray-400 text-xs mt-1">
-                  {new Date(ch.publishedAt).toLocaleDateString('vi-VN')}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        )}
-      </View>
+      <ReaderHeader
+        mangaTitle={chapter.manga.title}
+        chapterNumber={chapter.chapterNumber}
+        chapterTitle={chapter.title}
+        currentChapterIndex={getCurrentChapterIndex()}
+        totalChapters={allChapters.length}
+        showDropdown={showChapterDropdown}
+        chapters={allChapters}
+        currentChapterId={chapter.id}
+        onBack={handleBack}
+        onToggleDropdown={() => setShowChapterDropdown(!showChapterDropdown)}
+        onSelectChapter={goToChapter}
+      />
 
       {/* Images ScrollView */}
       <ScrollView
@@ -337,99 +282,29 @@ export const ReaderScreen: React.FC<ReaderScreenProps> = ({
         onContentSizeChange={handleContentSizeChange}
         contentContainerStyle={{ paddingTop: 70 }}
       >
-        {chapter.images.map((imageUrl, index) => {
-          // Get image dimensions if available, otherwise use default aspect ratio
-          const imgDim = imageDimensions[index];
-          const aspectRatio = imgDim ? imgDim.width / imgDim.height : 0.7;
-          
-          return (
-            <View key={index} style={{ width: '100%' }}>
-              <Image
-                source={{ uri: imageUrl }}
-                style={{ width: screenWidth, aspectRatio }}
-                resizeMode="contain"
-                onLoad={(e) => {
-                  const { width, height } = e.nativeEvent.source;
-                  setImageDimensions(prev => ({
-                    ...prev,
-                    [index]: { width, height }
-                  }));
-                }}
-              />
-            </View>
-          );
-        })}
-
-        {/* End of Chapter */}
-        <View className="bg-card p-8 items-center">
-          {/* <Text className="text-foreground text-xl font-bold mb-2">
-            Hết chương
-          </Text> */}
-          {/* <Text className="text-muted-foreground text-center mb-6">
-            Bạn đã đọc xong Chapter {chapter.chapterNumber}
-          </Text> */}
-          {/* <TouchableOpacity onPress={handleBack} className="bg-primary rounded-xl px-8 py-3">
-            <Text className="text-primary-foreground font-semibold">
-              Quay lại
-            </Text>
-          </TouchableOpacity> */}
-        </View>
+        <ImageList
+          images={chapter.images}
+          imageDimensions={imageDimensions}
+          onImageLoad={(index, width, height) => {
+            setImageDimensions((prev) => ({
+              ...prev,
+              [index]: { width, height },
+            }));
+          }}
+        />
+        <EndOfChapter />
       </ScrollView>
 
-      {/* Bottom Navigation */}
-      <View className="absolute bottom-0 left-0 right-0 bg-black/80">
-        {/* Progress Bar */}
-        <View className="px-2 pt-2">
-          <View className="bg-muted rounded-full h-1">
-            <View
-              className="bg-primary rounded-full h-1"
-              style={{
-                width: `${(currentPage / chapter.totalImages) * 100}%`,
-              }}
-            />
-          </View>
-        </View>
+      <BottomNavigation
+        currentPage={currentPage}
+        totalPages={chapter.totalImages}
+        hasPrevious={hasPreviousChapter()}
+        hasNext={hasNextChapter()}
+        onPrevious={goToPreviousChapter}
+        onNext={goToNextChapter}
+      />
 
-        {/* Navigation Buttons */}
-        <View className="flex-row items-center justify-between p-3">
-          <TouchableOpacity
-            onPress={goToPreviousChapter}
-            disabled={!hasPreviousChapter()}
-            className={`flex-row items-center px-4 py-2 rounded-lg ${
-              hasPreviousChapter() ? 'bg-primary' : 'bg-gray-700'
-            }`}
-          >
-            <Feather name="chevron-left" size={20} color="#FFFFFF" />
-            <Text className="text-white font-semibold ml-1">Trước</Text>
-          </TouchableOpacity>
-
-          <Text className="text-gray-400 text-sm">
-            {currentPage}/{chapter.totalImages}
-          </Text>
-
-          <TouchableOpacity
-            onPress={goToNextChapter}
-            disabled={!hasNextChapter()}
-            className={`flex-row items-center px-4 py-2 rounded-lg ${
-              hasNextChapter() ? 'bg-primary' : 'bg-gray-700'
-            }`}
-          >
-            <Text className="text-white font-semibold mr-1">Tiếp</Text>
-            <Feather name="chevron-right" size={20} color="#FFFFFF" />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {/* Scroll to Top Button */}
-      {showScrollTop && (
-        <TouchableOpacity
-          onPress={scrollToTop}
-          className="absolute right-4 bottom-24 bg-primary rounded-full p-3 shadow-lg"
-          style={{ elevation: 5 }}
-        >
-          <Feather name="arrow-up" size={24} color="#FFFFFF" />
-        </TouchableOpacity>
-      )}
+      <ScrollToTopButton visible={showScrollTop} onPress={scrollToTop} />
     </View>
   );
 };
