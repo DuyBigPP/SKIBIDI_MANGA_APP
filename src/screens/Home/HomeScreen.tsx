@@ -3,10 +3,16 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
+import { View, ScrollView, RefreshControl } from 'react-native';
 import { Manga } from '../../types/api.types';
 import { mangaService } from '../../services/api';
-import { SafeImage } from '../../components/SafeImage';
+import {
+  HomeHeader,
+  ErrorMessage,
+  FeaturedSection,
+  TrendingSection,
+  RecentSection,
+} from './components';
 
 interface HomeScreenProps {
   onMangaPress: (slug: string) => void;
@@ -85,192 +91,22 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onMangaPress }) => {
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#8B5CF6" />}
     >
       <View className="p-4">
-        {/* Header */}
-        <View className="mb-6">
-          <Text className="text-3xl font-bold text-foreground">SKIBIDIMANGA</Text>
-          <Text className="text-base text-muted-foreground mt-2">
-            APP MANGA LẬU XỊN NHẤT THẾ GIỚI 🐧
-          </Text>
-        </View>
+        <HomeHeader />
 
-        {/* Error Message */}
         {error && (
-          <View className="bg-destructive/20 border border-destructive/30 rounded-xl p-4 mb-6">
-            <Text className="text-destructive font-semibold mb-1">
-              {error.includes('Server đang bận') ? '⏱️ Server đang bận' : '⚠️ Không thể kết nối'}
-            </Text>
-            <Text className="text-destructive/80 text-sm mb-3">{error}</Text>
-            <TouchableOpacity
-              onPress={() => {
-                // Add delay for rate limit errors
-                if (error.includes('Server đang bận')) {
-                  setTimeout(() => loadHomeData(), 2000);
-                } else {
-                  loadHomeData();
-                }
-              }}
-              className="bg-destructive rounded-lg px-4 py-2 self-start"
-              disabled={loading || refreshing}
-            >
-              <Text className="text-white font-semibold">
-                {loading || refreshing ? 'Đang tải...' : 'Thử lại'}
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <ErrorMessage
+            error={error}
+            loading={loading}
+            refreshing={refreshing}
+            onRetry={loadHomeData}
+          />
         )}
 
-        {/* Featured Section */}
-        {featured && (
-          <TouchableOpacity
-            onPress={() => onMangaPress(featured.slug)}
-            className="mb-6"
-          >
-            <View className="bg-card rounded-2xl overflow-hidden">
-              <SafeImage
-                uri={featured.thumbnail}
-                className="w-full h-48"
-                resizeMode="cover"
-                showLoadingIndicator={false}
-              />
-              <View className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-              <View className="absolute bottom-0 left-0 right-0 p-6">
-                <View className="flex-row items-center mb-2">
-                  <View className="bg-primary rounded-full px-3 py-1 mr-2">
-                    <Text className="text-primary-foreground text-xs font-semibold">Nổi bật</Text>
-                  </View>
-                  <Text className="text-white/80 text-xs bg-card rounded-full px-2 py-1">
-                    {featured.totalChapters} chương
-                  </Text>
-                </View>
-                <View className="bg-black/30 backdrop-blur rounded-xl px-3 py-2 mb-2 self-start">
-                  <Text className="text-white text-2xl font-bold" numberOfLines={2}>
-                    {featured.title}
-                  </Text>
-                </View>
-                {featured.genres.length > 0 && (
-                  <View className="flex-row flex-wrap gap-2">
-                    {featured.genres.slice(0, 3).map((genre) => (
-                      <View key={genre.id} className="bg-black/20 backdrop-blur rounded-full px-3 py-1">
-                        <Text className="text-white text-xs font-medium">
-                          {genre.name}
-                        </Text>
-                      </View>
-                    ))}
-                  </View>
-                )}
-              </View>
-            </View>
-          </TouchableOpacity>
-        )}
+        {featured && <FeaturedSection manga={featured} onPress={onMangaPress} />}
 
-        {/* Trending Today */}
-        <View className="mb-6">
-          <View className="flex-row items-center justify-between mb-3">
-            <Text className="text-xl font-bold text-foreground">Thịnh hành hôm nay</Text>
-            {/* <TouchableOpacity>
-              <Text className="text-primary font-semibold">Xem tất cả</Text>
-            </TouchableOpacity> */}
-          </View>
+        <TrendingSection manga={trending} loading={loading} onMangaPress={onMangaPress} />
 
-          {loading ? (
-            <View className="flex-row">
-              {[1, 2, 3, 4].map((i) => (
-                <View key={i} className="mr-4 w-32">
-                  <View className="bg-card rounded-xl h-48 mb-2" />
-                  <View className="bg-card rounded h-4 mb-1" />
-                  <View className="bg-card rounded h-3 w-20" />
-                </View>
-              ))}
-            </View>
-          ) : trending.length > 0 ? (
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {trending.map((manga) => (
-                <TouchableOpacity
-                  key={manga.id}
-                  onPress={() => onMangaPress(manga.slug)}
-                  className="mr-4 w-32"
-                >
-                  <SafeImage
-                    uri={manga.thumbnail}
-                    className="bg-card rounded-xl h-48 mb-2 w-full"
-                    resizeMode="cover"
-                    showLoadingIndicator={false}
-                  />
-                  <Text className="font-semibold text-foreground text-sm" numberOfLines={2}>
-                    {manga.title}
-                  </Text>
-                  <Text className="text-muted-foreground text-xs">
-                    {manga.totalChapters} chương
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          ) : (
-            <View className="bg-card rounded-xl p-6 items-center">
-              <Text className="text-muted-foreground text-center">
-                Không có dữ liệu
-              </Text>
-            </View>
-          )}
-        </View>
-
-        {/* Recent Updates */}
-        <View className="mb-6">
-          <Text className="text-xl font-bold text-foreground mb-3">Cập nhật gần đây</Text>
-
-          {loading ? (
-            <>
-              {[1, 2, 3, 4].map((i) => (
-                <View key={i} className="flex-row mb-4 bg-card rounded-xl p-3">
-                  <View className="bg-muted rounded-lg w-16 h-20 mr-3" />
-                  <View className="flex-1">
-                    <View className="bg-muted rounded h-4 mb-2 w-3/4" />
-                    <View className="bg-muted rounded h-3 mb-1 w-1/2" />
-                    <View className="bg-muted rounded h-3 w-1/3" />
-                  </View>
-                </View>
-              ))}
-            </>
-          ) : recent.length > 0 ? (
-            <>
-              {recent.map((manga) => (
-                <TouchableOpacity
-                  key={manga.id}
-                  onPress={() => onMangaPress(manga.slug)}
-                  className="flex-row mb-4 bg-card rounded-xl p-3"
-                >
-                  <SafeImage
-                    uri={manga.thumbnail}
-                    className="bg-muted rounded-lg w-16 h-20 mr-3"
-                    resizeMode="cover"
-                    showLoadingIndicator={false}
-                  />
-                  <View className="flex-1">
-                    <Text className="font-bold text-foreground text-base mb-1" numberOfLines={2}>
-                      {manga.title}
-                    </Text>
-                    {manga.latestChapter && (
-                      <Text className="text-muted-foreground text-sm mb-1">
-                        {/* Chapter {manga.latestChapter.chapterNumber} */}
-                        {/* {manga.latestChapter.title && `: ${manga.latestChapter.title}`} */}
-                        {manga.latestChapter.title}
-                      </Text>
-                    )}
-                    <Text className="text-muted-foreground/70 text-xs">
-                      {new Date(manga.lastChapterAt).toLocaleDateString('vi-VN')}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </>
-          ) : (
-            <View className="bg-card rounded-xl p-6 items-center">
-              <Text className="text-muted-foreground text-center">
-                Không có dữ liệu
-              </Text>
-            </View>
-          )}
-        </View>
+        <RecentSection manga={recent} loading={loading} onMangaPress={onMangaPress} />
       </View>
     </ScrollView>
   );
