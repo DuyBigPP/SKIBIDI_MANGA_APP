@@ -16,7 +16,7 @@ export const StatsCard: React.FC<StatsCardProps> = ({ readingHistory, bookmarks,
         ) : (
           <>
             <Text className="text-2xl font-bold text-foreground">{readingHistory}</Text>
-            <Text className="text-muted-foreground text-xs text-center">Đã đọc</Text>
+            <Text className="text-muted-foreground text-xs text-center">Đã đọc </Text>
           </>
         )}
       </View>
