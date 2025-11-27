@@ -8,9 +8,8 @@ import { Chapter } from '../../types/api.types';
 import { chapterService, readingHistoryService } from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
 import { useReading } from '../../contexts/ReadingContext';
+import { LoadingView, NotFoundView } from '../../components';
 import {
-  LoadingView,
-  NotFoundView,
   ReaderHeader,
   ImageList,
   EndOfChapter,
@@ -250,11 +249,11 @@ export const ReaderScreen: React.FC<ReaderScreenProps> = ({
   };
 
   if (loading) {
-    return <LoadingView />;
+    return <LoadingView message="Đang tải chương..." backgroundColor="black" />;
   }
 
   if (!chapter) {
-    return <NotFoundView onBack={handleBack} />;
+    return <NotFoundView message="Không tìm thấy chương" onBack={handleBack} />;
   }
 
   return (

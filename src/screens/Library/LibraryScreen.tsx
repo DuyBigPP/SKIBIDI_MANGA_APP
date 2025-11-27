@@ -14,9 +14,9 @@ import { Bookmark, ReadingHistory } from '../../types/api.types';
 import { bookmarkService, readingHistoryService } from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
 import { useReading } from '../../contexts/ReadingContext';
+import { UnauthenticatedView } from '../../components';
 import {
   LibraryHeader,
-  UnauthenticatedView,
   LibraryTabs,
   ReadingTab,
   BookmarksTab,
@@ -134,7 +134,15 @@ export const LibraryScreen: React.FC<LibraryScreenProps> = ({
   };
 
   if (!isAuthenticated) {
-    return <UnauthenticatedView onLoginPress={onLoginPress} />;
+    return (
+      <UnauthenticatedView
+        icon="book"
+        title="Đăng nhập để sử dụng thư viện"
+        description="Lưu trữ manga yêu thích và lịch sử đọc của bạn"
+        buttonText="Đăng nhập ngay"
+        onLoginPress={onLoginPress}
+      />
+    );
   }
 
   return (

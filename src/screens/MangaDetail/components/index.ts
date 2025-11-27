@@ -1,6 +1,4 @@
 export { MangaDetailHeader } from './MangaDetailHeader';
-export { LoadingView } from './LoadingView';
-export { NotFoundView } from './NotFoundView';
 export { CoverImage } from './CoverImage';
 export { TitleSection } from './TitleSection';
 export { StatsCard } from './StatsCard';

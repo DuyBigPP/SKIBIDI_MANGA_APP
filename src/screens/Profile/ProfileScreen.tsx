@@ -6,8 +6,8 @@ import React, { useEffect, useState } from 'react';
 import { View, ScrollView, Alert } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
 import { bookmarkService, readingHistoryService } from '../../services/api';
+import { UnauthenticatedView } from '../../components';
 import {
-  UnauthenticatedView,
   ProfileHeader,
   StatsCard,
   AccountInfo,
@@ -78,7 +78,15 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({ onLoginPress, onEd
 
 
   if (!isAuthenticated) {
-    return <UnauthenticatedView onLoginPress={onLoginPress} />;
+    return (
+      <UnauthenticatedView
+        icon="user"
+        title="Chào mừng đến SKIBIBI MANGA"
+        description="Đăng nhập để trải nghiệm đầy đủ tính năng"
+        buttonText="Đăng nhập"
+        onLoginPress={onLoginPress}
+      />
+    );
   }
 
   return (

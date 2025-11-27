@@ -6,9 +6,9 @@ import React, { useEffect, useState } from 'react';
 import { View, ScrollView } from 'react-native';
 import { Manga } from '../../types/api.types';
 import { authorService, genreService } from '../../services/api';
+import { LoadingView } from '../../components';
 import {
   MangaListHeader,
-  LoadingView,
   StatsBar,
   MangaGrid,
   LoadMoreIndicator,

@@ -8,10 +8,9 @@ import { MangaDetail } from '../../types/api.types';
 import { mangaService, bookmarkService } from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
 import { useReading } from '../../contexts/ReadingContext';
+import { LoadingView, NotFoundView } from '../../components';
 import {
   MangaDetailHeader,
-  LoadingView,
-  NotFoundView,
   CoverImage,
   TitleSection,
   StatsCard,
@@ -115,7 +114,7 @@ export const MangaDetailScreen: React.FC<MangaDetailScreenProps> = ({
   }
 
   if (!manga) {
-    return <NotFoundView onBack={onBack} />;
+    return <NotFoundView message="Không tìm thấy manga" onBack={onBack} />;
   }
 
   return (
