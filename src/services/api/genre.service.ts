@@ -38,7 +38,7 @@ export const genreService = {
     params?: {
       page?: number;
       limit?: number;
-      sortBy?: 'createdAt';
+      sortBy?: 'createdAt' | 'updatedAt';
       order?: 'asc' | 'desc';
     }
   ): Promise<{
