@@ -5,20 +5,23 @@
 import React, { useEffect, useState } from 'react';
 import {
   View,
-  Text,
   ScrollView,
-  TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
   Alert,
 } from 'react-native';
-import { Feather } from '@expo/vector-icons';
-import { BookOpen } from 'lucide-react-native';
 import { Bookmark, ReadingHistory } from '../../types/api.types';
 import { bookmarkService, readingHistoryService } from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
 import { useReading } from '../../contexts/ReadingContext';
-import { SafeImage } from '../../components/SafeImage';
+import {
+  LibraryHeader,
+  UnauthenticatedView,
+  LibraryTabs,
+  ReadingTab,
+  BookmarksTab,
+  HistoryTab,
+} from './components';
 
 interface LibraryScreenProps {
   onMangaPress: (slug: string) => void;
@@ -131,20 +134,7 @@ export const LibraryScreen: React.FC<LibraryScreenProps> = ({
   };
 
   if (!isAuthenticated) {
-    return (
-      <View className="flex-1 bg-background items-center justify-center p-8">
-        <BookOpen size={64} color="#8B5CF6" strokeWidth={1.5} />
-        <Text className="text-xl font-bold text-foreground text-center mb-2 mt-4">
-          Đăng nhập để sử dụng thư viện
-        </Text>
-        <Text className="text-base text-muted-foreground text-center mb-6">
-          Lưu trữ manga yêu thích và lịch sử đọc của bạn
-        </Text>
-        <TouchableOpacity onPress={onLoginPress} className="bg-primary rounded-xl px-8 py-3">
-          <Text className="text-primary-foreground font-semibold">Đăng nhập ngay</Text>
-        </TouchableOpacity>
-      </View>
-    );
+    return <UnauthenticatedView onLoginPress={onLoginPress} />;
   }
 
   return (
@@ -153,195 +143,30 @@ export const LibraryScreen: React.FC<LibraryScreenProps> = ({
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#8B5CF6" />}
     >
       <View className="p-4">
-        {/* Header */}
-        <Text className="text-3xl font-bold text-foreground mb-6">Thư viện</Text>
+        <LibraryHeader />
 
-        {/* Tabs */}
-        <View className="flex-row mb-6 bg-muted rounded-xl p-1">
-          <TouchableOpacity
-            onPress={() => setActiveTab('reading')}
-            className={`flex-1 py-3 rounded-lg ${
-              activeTab === 'reading' ? 'bg-primary' : ''
-            }`}
-          >
-            <Text
-              className={`text-center font-semibold ${
-                activeTab === 'reading' ? 'text-primary-foreground' : 'text-muted-foreground'
-              }`}
-            >
-              Đang đọc
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setActiveTab('bookmarks')}
-            className={`flex-1 py-3 rounded-lg ${
-              activeTab === 'bookmarks' ? 'bg-primary' : ''
-            }`}
-          >
-            <Text
-              className={`text-center font-semibold ${
-                activeTab === 'bookmarks' ? 'text-primary-foreground' : 'text-muted-foreground'
-              }`}
-            >
-              Yêu thích
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setActiveTab('history')}
-            className={`flex-1 py-3 rounded-lg ${
-              activeTab === 'history' ? 'bg-primary' : ''
-            }`}
-          >
-            <Text
-              className={`text-center font-semibold ${
-                activeTab === 'history' ? 'text-primary-foreground' : 'text-muted-foreground'
-              }`}
-            >
-              Lịch sử
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <LibraryTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-        {/* Content */}
         {loading ? (
           <View className="py-12">
             <ActivityIndicator size="large" color="#8B5CF6" />
           </View>
         ) : (
           <>
-            {/* Continue Reading */}
             {activeTab === 'reading' && (
-              <View>
-                {readingList.length > 0 ? (
-                  readingList.map((item) => (
-                    <TouchableOpacity
-                      key={item.id}
-                      onPress={() => onChapterPress(item.chapter.slug)}
-                      className="flex-row mb-4 bg-card rounded-xl p-3 border border-border"
-                    >
-                      <SafeImage
-                        uri={item.manga.thumbnail}
-                        className="bg-muted rounded-lg w-20 h-28 mr-3"
-                        resizeMode="cover"
-                        showLoadingIndicator={false}
-                      />
-                      <View className="flex-1">
-                        <Text className="font-bold text-foreground text-base mb-1" numberOfLines={2}>
-                          {item.manga.title}
-                        </Text>
-                        <Text className="text-muted-foreground text-sm mb-2">
-                          Chapter {item.chapter.chapterNumber}
-                          {item.chapter.title && `: ${item.chapter.title}`}
-                        </Text>
-
-                        {/* Progress Bar */}
-                        <View className="bg-muted rounded-full h-2 mb-2">
-                          <View
-                            className="bg-primary rounded-full h-2"
-                            style={{ width: `${item.progressPercent}%` }}
-                          />
-                        </View>
-
-                        <Text className="text-muted-foreground/70 text-xs">
-                          Đã đọc {item.progressPercent}% • {new Date(item.lastReadAt).toLocaleDateString('vi-VN')}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  ))
-                ) : (
-                  <View className="py-12 items-center">
-                    <Text className="text-muted-foreground text-base">
-                      Chưa có manga đang đọc
-                    </Text>
-                  </View>
-                )}
-              </View>
+              <ReadingTab readingList={readingList} onChapterPress={onChapterPress} />
             )}
 
-            {/* Bookmarks */}
             {activeTab === 'bookmarks' && (
-              <View>
-                {bookmarks.length > 0 ? (
-                  <View className="flex-row flex-wrap justify-between">
-                    {bookmarks.map((item) => (
-                      <TouchableOpacity
-                        key={item.id}
-                        onPress={() => onMangaPress(item.manga.slug)}
-                        className="w-[48%] mb-4"
-                      >
-                        <SafeImage
-                          uri={item.manga.thumbnail}
-                          className="bg-card rounded-xl h-56 mb-2 border border-border w-full"
-                          resizeMode="cover"
-                          showLoadingIndicator={false}
-                        />
-                        <Text className="font-bold text-foreground text-sm" numberOfLines={2}>
-                          {item.manga.title}
-                        </Text>
-                        <Text className="text-muted-foreground text-xs">
-                          {item.manga.totalChapters} chương
-                        </Text>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                ) : (
-                  <View className="py-12 items-center">
-                    <Text className="text-muted-foreground text-base">
-                      Chưa có manga yêu thích
-                    </Text>
-                  </View>
-                )}
-              </View>
+              <BookmarksTab bookmarks={bookmarks} onMangaPress={onMangaPress} />
             )}
 
-            {/* History */}
             {activeTab === 'history' && (
-              <View>
-                {history.length > 0 && (
-                  <TouchableOpacity
-                    onPress={handleClearHistory}
-                    className="bg-destructive/20 rounded-xl p-3 mb-4 border border-destructive/30 flex-row items-center justify-center"
-                  >
-                    <Feather name="trash-2" size={18} color="#EF4444" />
-                    <Text className="text-destructive font-semibold ml-2">
-                      Xóa toàn bộ lịch sử
-                    </Text>
-                  </TouchableOpacity>
-                )}
-                {history.length > 0 ? (
-                  history.map((item) => (
-                    <TouchableOpacity
-                      key={item.id}
-                      onPress={() => onMangaPress(item.manga.slug)}
-                      className="flex-row mb-4 bg-card rounded-xl p-3 border border-border"
-                    >
-                      <SafeImage
-                        uri={item.manga.thumbnail}
-                        className="bg-muted rounded-lg w-16 h-20 mr-3"
-                        resizeMode="cover"
-                        showLoadingIndicator={false}
-                      />
-                      <View className="flex-1">
-                        <Text className="font-bold text-foreground text-base mb-1" numberOfLines={2}>
-                          {item.manga.title}
-                        </Text>
-                        <Text className="text-muted-foreground text-sm mb-1">
-                          Chapter {item.chapter.chapterNumber}
-                        </Text>
-                        <Text className="text-muted-foreground/70 text-xs">
-                          {new Date(item.lastReadAt).toLocaleDateString('vi-VN')}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  ))
-                ) : (
-                  <View className="py-12 items-center">
-                    <Text className="text-muted-foreground text-base">
-                      Chưa có lịch sử đọc
-                    </Text>
-                  </View>
-                )}
-              </View>
+              <HistoryTab 
+                history={history} 
+                onMangaPress={onMangaPress} 
+                onClearHistory={handleClearHistory} 
+              />
             )}
           </>
         )}
