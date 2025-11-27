@@ -142,7 +142,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onMangaPress }) => {
                     {featured.totalChapters} chương
                   </Text>
                 </View>
-                <View className="bg-black/30 backdrop-blur rounded-xl px-3 py-2 mb-2">
+                <View className="bg-black/30 backdrop-blur rounded-xl px-3 py-2 mb-2 self-start">
                   <Text className="text-white text-2xl font-bold" numberOfLines={2}>
                     {featured.title}
                   </Text>
