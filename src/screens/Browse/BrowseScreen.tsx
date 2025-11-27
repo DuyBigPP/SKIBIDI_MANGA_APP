@@ -244,7 +244,7 @@ export const BrowseScreen: React.FC<BrowseScreenProps> = ({ onMangaPress }) => {
       >
         <View className="p-4">
           {/* Header */}
-          <Text className="text-3xl font-bold text-foreground mb-6">Khám phá</Text>
+          <Text className="text-3xl font-bold text-foreground mb-6">Tìm kiếm</Text>
 
           {/* Search Bar with Filter Button */}
           <View className="mb-4 flex-row items-center">
