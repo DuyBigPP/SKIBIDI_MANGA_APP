@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useMemo } from 'react';
 import { View, Image, useWindowDimensions } from 'react-native';
 
 interface ImageListProps {
@@ -7,7 +7,31 @@ interface ImageListProps {
   onImageLoad: (index: number, width: number, height: number) => void;
 }
 
-export const ImageList: React.FC<ImageListProps> = ({
+const MemoizedImageItem = memo<{
+  imageUrl: string;
+  index: number;
+  screenWidth: number;
+  aspectRatio: number;
+  onImageLoad: (index: number, width: number, height: number) => void;
+}>(({ imageUrl, index, screenWidth, aspectRatio, onImageLoad }) => {
+  return (
+    <View style={{ width: '100%' }}>
+      <Image
+        source={{ uri: imageUrl }}
+        style={{ width: screenWidth, aspectRatio }}
+        resizeMode="contain"
+        onLoad={(e) => {
+          const { width, height } = e.nativeEvent.source;
+          onImageLoad(index, width, height);
+        }}
+      />
+    </View>
+  );
+});
+
+MemoizedImageItem.displayName = 'MemoizedImageItem';
+
+export const ImageList: React.FC<ImageListProps> = memo(({
   images,
   imageDimensions,
   onImageLoad,
@@ -21,19 +45,16 @@ export const ImageList: React.FC<ImageListProps> = ({
         const aspectRatio = imgDim ? imgDim.width / imgDim.height : 0.7;
 
         return (
-          <View key={index} style={{ width: '100%' }}>
-            <Image
-              source={{ uri: imageUrl }}
-              style={{ width: screenWidth, aspectRatio }}
-              resizeMode="contain"
-              onLoad={(e) => {
-                const { width, height } = e.nativeEvent.source;
-                onImageLoad(index, width, height);
-              }}
-            />
-          </View>
+          <MemoizedImageItem
+            key={index}
+            imageUrl={imageUrl}
+            index={index}
+            screenWidth={screenWidth}
+            aspectRatio={aspectRatio}
+            onImageLoad={onImageLoad}
+          />
         );
       })}
     </>
   );
-};
+});

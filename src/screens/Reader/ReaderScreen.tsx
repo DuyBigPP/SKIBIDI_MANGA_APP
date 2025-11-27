@@ -2,7 +2,7 @@
  * Reader Screen - Chapter reading interface
  */
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { View, ScrollView, Alert } from 'react-native';
 import { Chapter } from '../../types/api.types';
 import { chapterService, readingHistoryService } from '../../services/api';
@@ -161,25 +161,47 @@ export const ReaderScreen: React.FC<ReaderScreenProps> = ({
     }
   };
 
-  const handleScroll = (event: any) => {
+  const handleScroll = useCallback((event: any) => {
     const scrollY = event.nativeEvent.contentOffset.y;
     const layoutHeight = event.nativeEvent.layoutMeasurement.height;
+    const contentHeight = event.nativeEvent.contentSize.height;
 
-    // Show/hide scroll to top button
-    setShowScrollTop(scrollY > layoutHeight);
+    // Show/hide scroll to top button (only update if changed)
+    const shouldShowScrollTop = scrollY > layoutHeight;
+    if (shouldShowScrollTop !== showScrollTop) {
+      setShowScrollTop(shouldShowScrollTop);
+    }
 
     // Calculate current page based on scroll position (middle of viewport)
-    if (chapter) {
+    if (chapter && contentHeight > 0) {
       const viewportMiddle = scrollY + (layoutHeight / 2);
-      // Simple estimation: assume images are evenly distributed
-      const estimatedPage = Math.floor((viewportMiddle / event.nativeEvent.contentSize.height) * chapter.images.length) + 1;
-      setCurrentPage(Math.max(1, Math.min(estimatedPage, chapter.totalImages)));
+      const estimatedPage = Math.floor((viewportMiddle / contentHeight) * chapter.images.length) + 1;
+      const newPage = Math.max(1, Math.min(estimatedPage, chapter.totalImages));
+      
+      // Only update if page changed significantly (reduces re-renders)
+      if (Math.abs(newPage - currentPageRef.current) >= 1) {
+        currentPageRef.current = newPage;
+        setCurrentPage(newPage);
+      }
     }
-  };
+  }, [chapter, showScrollTop]);
 
-  const scrollToTop = () => {
+  const scrollToTop = useCallback(() => {
     scrollViewRef.current?.scrollTo({ y: 0, animated: true });
-  };
+  }, []);
+
+  const handleImageLoad = useCallback((index: number, width: number, height: number) => {
+    setImageDimensions((prev) => {
+      // Only update if dimensions changed
+      if (prev[index]?.width === width && prev[index]?.height === height) {
+        return prev;
+      }
+      return {
+        ...prev,
+        [index]: { width, height },
+      };
+    });
+  }, []);
 
   const getCurrentChapterIndex = () => {
     return allChapters.findIndex(ch => ch.id === chapter?.id);
@@ -276,20 +298,16 @@ export const ReaderScreen: React.FC<ReaderScreenProps> = ({
       <ScrollView
         ref={scrollViewRef}
         onScroll={handleScroll}
-        scrollEventThrottle={16}
+        scrollEventThrottle={100}
         showsVerticalScrollIndicator={false}
         onContentSizeChange={handleContentSizeChange}
         contentContainerStyle={{ paddingTop: 70 }}
+        removeClippedSubviews={true}
       >
         <ImageList
           images={chapter.images}
           imageDimensions={imageDimensions}
-          onImageLoad={(index, width, height) => {
-            setImageDimensions((prev) => ({
-              ...prev,
-              [index]: { width, height },
-            }));
-          }}
+          onImageLoad={handleImageLoad}
         />
         <EndOfChapter />
       </ScrollView>
