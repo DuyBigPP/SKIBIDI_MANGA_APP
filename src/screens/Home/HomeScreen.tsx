@@ -138,17 +138,25 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onMangaPress }) => {
                   <View className="bg-primary rounded-full px-3 py-1 mr-2">
                     <Text className="text-primary-foreground text-xs font-semibold">Nổi bật</Text>
                   </View>
-                  <Text className="text-white/80 text-xs">
+                  <Text className="text-white/80 text-xs bg-card rounded-full px-2 py-1">
                     {featured.totalChapters} chương
                   </Text>
                 </View>
-                <Text className="text-white text-2xl font-bold mb-2" numberOfLines={2}>
-                  {featured.title}
-                </Text>
-                {featured.genres.length > 0 && (
-                  <Text className="text-white/70 text-sm">
-                    {featured.genres.slice(0, 3).map(g => g.name).join(' • ')}
+                <View className="bg-black/30 backdrop-blur rounded-xl px-3 py-2 mb-2">
+                  <Text className="text-white text-2xl font-bold" numberOfLines={2}>
+                    {featured.title}
                   </Text>
+                </View>
+                {featured.genres.length > 0 && (
+                  <View className="flex-row flex-wrap gap-2">
+                    {featured.genres.slice(0, 3).map((genre) => (
+                      <View key={genre.id} className="bg-black/20 backdrop-blur rounded-full px-3 py-1">
+                        <Text className="text-white text-xs font-medium">
+                          {genre.name}
+                        </Text>
+                      </View>
+                    ))}
+                  </View>
                 )}
               </View>
             </View>
