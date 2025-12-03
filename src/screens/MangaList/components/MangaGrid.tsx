@@ -27,13 +27,7 @@ export const MangaGrid: React.FC<MangaGridProps> = ({ manga, onMangaPress }) => 
         >
           <SafeImage
             uri={item.thumbnail}
-            style={{
-              width: '100%',
-              height: 224,
-              borderRadius: 12,
-              marginBottom: 8,
-              backgroundColor: '#1E293B',
-            }}
+            className="w-full h-[224px] rounded-xl mb-2 bg-muted"
             resizeMode="cover"
             showLoadingIndicator={false}
           />

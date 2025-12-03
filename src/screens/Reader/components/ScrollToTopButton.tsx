@@ -13,14 +13,7 @@ export const ScrollToTopButton: React.FC<ScrollToTopButtonProps> = ({ visible, o
   return (
     <TouchableOpacity
       onPress={onPress}
-      className="absolute right-4 bottom-28 bg-primary rounded-2xl p-3.5"
-      style={{ 
-        elevation: 8,
-        shadowColor: '#A855F7',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
-      }}
+      className="absolute right-4 bottom-28 bg-primary rounded-2xl p-3.5 shadow-lg shadow-primary/30"
       activeOpacity={0.8}
     >
       <ArrowUp size={22} color="#FFFFFF" strokeWidth={2.5} />

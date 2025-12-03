@@ -25,8 +25,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           value={searchQuery}
           onChangeText={onSearchChange}
           returnKeyType="search"
-          className="flex-1 text-base text-foreground ml-3"
-          style={{ paddingVertical: 0 }}
+          className="flex-1 text-base text-foreground ml-3 py-0"
         />
         {searchQuery.length > 0 && (
           <TouchableOpacity 

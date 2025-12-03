@@ -15,20 +15,12 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user, onEditPress 
       {/* Avatar with glow effect */}
       <View className="relative mb-4">
         <View 
-          className="absolute inset-0 bg-primary rounded-full opacity-30 blur-xl"
-          style={{ transform: [{ scale: 1.2 }] }}
+          className="absolute inset-0 bg-primary rounded-full opacity-30 blur-xl scale-125"
         />
         {user?.avatar ? (
           <SafeImage
             uri={user.avatar}
-            style={{
-              width: 100,
-              height: 100,
-              borderRadius: 50,
-              backgroundColor: '#A855F7',
-              borderWidth: 3,
-              borderColor: '#A855F7',
-            }}
+            className="w-[100px] h-[100px] rounded-full bg-primary border-[3px] border-primary"
             resizeMode="cover"
             showLoadingIndicator={false}
             fallbackIcon={false}

@@ -58,11 +58,7 @@ export const MangaGrid: React.FC<MangaGridProps> = ({
                 <View className="overflow-hidden rounded-2xl border border-border/20">
                   <SafeImage
                     uri={item.thumbnail}
-                    style={{ 
-                      width: '100%', 
-                      height: 224, 
-                      backgroundColor: '#161633'
-                    }}
+                    className="w-full h-[224px] bg-muted"
                     resizeMode="cover"
                     showLoadingIndicator={false}
                   />
@@ -107,15 +103,8 @@ export const MangaGrid: React.FC<MangaGridProps> = ({
             {hasActiveFilters && (
               <TouchableOpacity 
                 onPress={onClearFilters}
-                className="mt-5 bg-primary rounded-xl px-6 py-3 flex-row items-center"
+                className="mt-5 bg-primary rounded-xl px-6 py-3 flex-row items-center shadow-lg shadow-primary/30"
                 activeOpacity={0.8}
-                style={{
-                  shadowColor: '#A855F7',
-                  shadowOffset: { width: 0, height: 4 },
-                  shadowOpacity: 0.3,
-                  shadowRadius: 8,
-                  elevation: 6,
-                }}
               >
                 <Trash2 size={16} color="#FAFAFA" strokeWidth={2} />
                 <Text className="text-primary-foreground font-bold ml-2">

@@ -250,15 +250,8 @@ export const FilterModal: React.FC<FilterModalProps> = ({
             </TouchableOpacity>
             <TouchableOpacity
               onPress={onClose}
-              className="flex-1 bg-primary rounded-2xl p-4"
+              className="flex-1 bg-primary rounded-2xl p-4 shadow-lg shadow-primary/30"
               activeOpacity={0.8}
-              style={{
-                shadowColor: '#A855F7',
-                shadowOffset: { width: 0, height: 4 },
-                shadowOpacity: 0.3,
-                shadowRadius: 8,
-                elevation: 6,
-              }}
             >
               <Text className="text-primary-foreground font-black text-center">Áp dụng</Text>
             </TouchableOpacity>

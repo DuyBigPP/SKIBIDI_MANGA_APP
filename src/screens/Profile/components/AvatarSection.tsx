@@ -28,11 +28,7 @@ export const AvatarSection: React.FC<AvatarSectionProps> = ({
       >
         {/* Gradient ring */}
         <View 
-          className="w-36 h-36 rounded-full items-center justify-center"
-          style={{
-            borderWidth: 3,
-            borderColor: '#A855F7',
-          }}
+          className="w-36 h-36 rounded-full items-center justify-center border-[3px] border-primary"
         >
           {avatar ? (
             <Image
@@ -43,8 +39,7 @@ export const AvatarSection: React.FC<AvatarSectionProps> = ({
                   ? avatar // Cloudinary URL
                   : `data:image/jpeg;base64,${avatar}`, // Base64 from DB
               }}
-              className="w-32 h-32 rounded-full"
-              style={{ backgroundColor: '#A855F7' }}
+              className="w-32 h-32 rounded-full bg-primary"
             />
           ) : (
             <View className="w-32 h-32 rounded-full bg-primary items-center justify-center">
@@ -59,14 +54,7 @@ export const AvatarSection: React.FC<AvatarSectionProps> = ({
 
         {/* Upload/Camera Icon */}
         <View 
-          className="absolute bottom-0 right-0 bg-primary rounded-2xl p-2.5 border-4 border-background"
-          style={{
-            shadowColor: '#A855F7',
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.3,
-            shadowRadius: 8,
-            elevation: 6,
-          }}
+          className="absolute bottom-0 right-0 bg-primary rounded-2xl p-2.5 border-4 border-background shadow-lg shadow-primary/30"
         >
           {loading ? (
             <ActivityIndicator size="small" color="#FAFAFA" />

@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
 
 interface BottomTabBarProps {
   activeTab: string;
@@ -23,12 +22,8 @@ export const BottomTabBar: React.FC<BottomTabBarProps> = ({ activeTab, onTabChan
 
   return (
     <View 
-      className="bg-card/95 border-t border-border/50 backdrop-blur-lg"
-      style={{ 
-        paddingBottom: insets.bottom + 4,
-        paddingTop: 8,
-        paddingHorizontal: 8,
-      }}
+      className="bg-card/95 border-t border-border/50 backdrop-blur-lg pt-2 px-2"
+      style={{ paddingBottom: insets.bottom + 4 }}
     >
       <View className="flex-row">
         {tabs.map((tab) => {

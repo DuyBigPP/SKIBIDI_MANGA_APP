@@ -12,8 +12,7 @@ export const RandomMangaButton: React.FC<RandomMangaButtonProps> = ({ onPress, l
     <TouchableOpacity
       onPress={onPress}
       disabled={loading}
-      className="mb-5 bg-gradient-to-r from-primary to-secondary rounded-2xl p-4 flex-row items-center border border-primary/30"
-      style={{ backgroundColor: '#7C3AED' }}
+      className="mb-5 bg-primary-dark rounded-2xl p-4 flex-row items-center border border-primary/30"
       activeOpacity={0.85}
     >
       {loading ? (

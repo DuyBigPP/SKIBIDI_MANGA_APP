@@ -157,17 +157,10 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
 
           {/* Register Button */}
           <TouchableOpacity
-            className={`bg-primary rounded-2xl p-4 items-center mb-5 ${loading ? 'opacity-50' : ''}`}
+            className={`bg-primary rounded-2xl p-4 items-center mb-5 shadow-lg shadow-primary/30 ${loading ? 'opacity-50' : ''}`}
             onPress={handleRegister}
             disabled={loading}
             activeOpacity={0.8}
-            style={{
-              shadowColor: '#A855F7',
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.3,
-              shadowRadius: 8,
-              elevation: 6,
-            }}
           >
             {loading ? (
               <ActivityIndicator color="#FAFAFA" />

@@ -12,17 +12,10 @@ export const SaveButton: React.FC<SaveButtonProps> = ({ onPress, loading }) => {
     <TouchableOpacity
       onPress={onPress}
       disabled={loading}
-      className={`rounded-2xl p-4 flex-row items-center justify-center ${
+      className={`rounded-2xl p-4 flex-row items-center justify-center shadow-lg shadow-primary/30 ${
         loading ? 'bg-primary/50' : 'bg-primary'
       }`}
       activeOpacity={0.8}
-      style={{
-        shadowColor: '#A855F7',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
-        elevation: 6,
-      }}
     >
       {loading ? (
         <>

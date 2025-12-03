@@ -19,10 +19,10 @@ export const FeaturedSection: React.FC<FeaturedSectionProps> = ({ manga, onPress
       className="mb-8"
       activeOpacity={0.9}
     >
-      <View className="rounded-3xl overflow-hidden" style={{ height: 220 }}>
+      <View className="rounded-3xl overflow-hidden h-[220px]">
         <SafeImage
           uri={manga.thumbnail}
-          style={{ width: '100%', height: '100%' }}
+          className="w-full h-full"
           resizeMode="cover"
           showLoadingIndicator={false}
         />
@@ -30,13 +30,7 @@ export const FeaturedSection: React.FC<FeaturedSectionProps> = ({ manga, onPress
         {/* Gradient Overlay */}
         <LinearGradient
           colors={['transparent', 'rgba(10, 10, 15, 0.6)', 'rgba(10, 10, 15, 0.95)']}
-          style={{
-            position: 'absolute',
-            left: 0,
-            right: 0,
-            bottom: 0,
-            height: '80%',
-          }}
+          className="absolute left-0 right-0 bottom-0 h-[80%]"
         />
 
         {/* Featured Badge */}

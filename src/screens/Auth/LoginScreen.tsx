@@ -15,7 +15,6 @@ import {
   ScrollView,
 } from 'react-native';
 import { BookOpen, Mail, Lock, Sparkles, UserCircle } from 'lucide-react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useAuth } from '../../contexts/AuthContext';
 
 interface LoginScreenProps {
@@ -119,17 +118,10 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
 
           {/* Login Button */}
           <TouchableOpacity
-            className={`bg-primary rounded-2xl p-4 items-center mb-5 ${loading ? 'opacity-50' : ''}`}
+            className={`bg-primary rounded-2xl p-4 items-center mb-5 shadow-lg shadow-primary/30 ${loading ? 'opacity-50' : ''}`}
             onPress={handleLogin}
             disabled={loading}
             activeOpacity={0.8}
-            style={{
-              shadowColor: '#A855F7',
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.3,
-              shadowRadius: 8,
-              elevation: 6,
-            }}
           >
             {loading ? (
               <ActivityIndicator color="#FAFAFA" />

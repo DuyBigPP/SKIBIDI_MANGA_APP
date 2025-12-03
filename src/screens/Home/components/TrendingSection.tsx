@@ -61,11 +61,7 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
               <View className="relative">
                 <SafeImage
                   uri={item.thumbnail}
-                  style={{ 
-                    height: 200, 
-                    borderRadius: 16,
-                    backgroundColor: '#1A1A24',
-                  }}
+                  className="h-[200px] rounded-2xl bg-muted"
                   resizeMode="cover"
                   showLoadingIndicator={false}
                 />

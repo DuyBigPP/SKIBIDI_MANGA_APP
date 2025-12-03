@@ -59,12 +59,7 @@ export const RecentSection: React.FC<RecentSectionProps> = ({
             >
               <SafeImage
                 uri={item.thumbnail}
-                style={{ 
-                  width: 60, 
-                  height: 80, 
-                  borderRadius: 12,
-                  backgroundColor: '#1A1A24',
-                }}
+                className="w-[60px] h-[80px] rounded-xl bg-muted"
                 resizeMode="cover"
                 showLoadingIndicator={false}
               />
