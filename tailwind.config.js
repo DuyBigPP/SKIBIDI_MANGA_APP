@@ -10,45 +10,69 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Dark theme colors (purple/blue)
-        background: '#0F172A',
-        foreground: '#E2E8F0',
+        // Enhanced Dark theme - Gaming/Entertainment focused
+        background: '#0A0A0F',      // Deeper black for OLED
+        foreground: '#F1F5F9',       // Brighter white for contrast
         card: {
-          DEFAULT: '#1E293B',
-          foreground: '#E2E8F0',
+          DEFAULT: '#12121A',        // Dark card background
+          foreground: '#F1F5F9',
         },
         popover: {
-          DEFAULT: '#1E293B',
-          foreground: '#E2E8F0',
+          DEFAULT: '#12121A',
+          foreground: '#F1F5F9',
         },
         primary: {
-          DEFAULT: '#8B5CF6',
-          foreground: '#F8FAFC',
+          DEFAULT: '#A855F7',        // Vibrant purple
+          foreground: '#FAFAFA',
+          light: '#C084FC',          // Light purple for hover
+          dark: '#7C3AED',           // Dark purple
         },
         secondary: {
-          DEFAULT: '#6366F1',
-          foreground: '#F8FAFC',
+          DEFAULT: '#6366F1',        // Indigo
+          foreground: '#FAFAFA',
         },
         muted: {
-          DEFAULT: '#334155',
-          foreground: '#94A3B8',
+          DEFAULT: '#1A1A24',        // Slightly lighter than background
+          foreground: '#A1A1AA',     // Better muted text
         },
         accent: {
-          DEFAULT: '#818CF8',
-          foreground: '#F8FAFC',
+          DEFAULT: '#F472B6',        // Pink accent for highlights
+          foreground: '#FAFAFA',
+          purple: '#C084FC',
+          blue: '#60A5FA',
         },
         destructive: {
-          DEFAULT: '#EF4444',
-          foreground: '#F8FAFC',
+          DEFAULT: '#F43F5E',        // Rose red
+          foreground: '#FAFAFA',
         },
-        border: '#475569',
-        input: '#475569',
-        ring: '#8B5CF6',
+        success: {
+          DEFAULT: '#22C55E',        // Bright green
+          foreground: '#FAFAFA',
+        },
+        warning: {
+          DEFAULT: '#F59E0B',        // Amber
+          foreground: '#FAFAFA',
+        },
+        border: '#27272A',           // Subtle border
+        input: '#27272A',
+        ring: '#A855F7',
+        // Gradient stops
+        gradient: {
+          start: '#A855F7',
+          middle: '#6366F1',
+          end: '#3B82F6',
+        },
       },
       borderRadius: {
-        lg: '0.5rem',
-        md: '0.375rem',
+        '2xl': '1rem',
+        '3xl': '1.5rem',
+        lg: '0.75rem',
+        md: '0.5rem',
         sm: '0.25rem',
+      },
+      boxShadow: {
+        'glow': '0 0 20px rgba(168, 85, 247, 0.3)',
+        'glow-lg': '0 0 40px rgba(168, 85, 247, 0.4)',
       },
     },
   },

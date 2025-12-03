@@ -1,6 +1,6 @@
 import React from 'react';
-import { TouchableOpacity, Text, ActivityIndicator } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { TouchableOpacity, Text, ActivityIndicator, View } from 'react-native';
+import { Save } from 'lucide-react-native';
 
 interface SaveButtonProps {
   onPress: () => void;
@@ -12,21 +12,31 @@ export const SaveButton: React.FC<SaveButtonProps> = ({ onPress, loading }) => {
     <TouchableOpacity
       onPress={onPress}
       disabled={loading}
-      className={`rounded-xl p-4 flex-row items-center justify-center ${
+      className={`rounded-2xl p-4 flex-row items-center justify-center ${
         loading ? 'bg-primary/50' : 'bg-primary'
       }`}
+      activeOpacity={0.8}
+      style={{
+        shadowColor: '#A855F7',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 6,
+      }}
     >
       {loading ? (
         <>
-          <ActivityIndicator size="small" color="#F8FAFC" />
-          <Text className="text-primary-foreground font-bold text-center text-base ml-2">
+          <ActivityIndicator size="small" color="#FAFAFA" />
+          <Text className="text-primary-foreground font-black text-center text-base ml-2">
             Đang lưu...
           </Text>
         </>
       ) : (
         <>
-          <Feather name="save" size={20} color="#F8FAFC" />
-          <Text className="text-primary-foreground font-bold text-center text-base ml-2">
+          <View className="bg-white/20 rounded-lg p-1.5">
+            <Save size={18} color="#FAFAFA" strokeWidth={2.5} />
+          </View>
+          <Text className="text-primary-foreground font-black text-center text-base ml-2">
             Lưu thay đổi
           </Text>
         </>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { Play, BookOpen } from 'lucide-react-native';
 import { ReadingHistory } from '../../../types/api.types';
 
 interface ContinueReadingButtonProps {
@@ -16,8 +16,8 @@ export const ContinueReadingButton: React.FC<ContinueReadingButtonProps> = ({
 }) => {
   if (loading) {
     return (
-      <View className="bg-card rounded-xl p-4 mb-4 items-center justify-center">
-        <ActivityIndicator size="small" color="#8B5CF6" />
+      <View className="bg-surface rounded-2xl p-4 mb-4 items-center justify-center border border-border/20">
+        <ActivityIndicator size="small" color="#A855F7" />
       </View>
     );
   }
@@ -26,24 +26,39 @@ export const ContinueReadingButton: React.FC<ContinueReadingButtonProps> = ({
     return null;
   }
 
+  const progress = continueReading.progressPercent || 0;
+
   return (
     <TouchableOpacity
       onPress={() => onPress(continueReading.chapter.slug)}
-      className="bg-primary rounded-xl px-4 p-2 mb-2 flex-row items-center justify-between"
+      className="bg-primary rounded-2xl p-4 mb-4 flex-row items-center justify-between overflow-hidden relative"
+      activeOpacity={0.85}
     >
-      <View className="flex-1">
-        <Text className="text-primary-foreground font-bold text-base">
-          Tiếp tục đọc
-        </Text>
-        <Text className="text-primary-foreground/80 text-sm">
-          {continueReading.chapter.title}
-        </Text>
-        <Text className="text-primary-foreground/60 text-xs mt-1">
-          Trang {continueReading.currentPage}/{continueReading.totalPages} • {continueReading.progressPercent}%
-        </Text>
+      {/* Progress bar background */}
+      <View 
+        className="absolute left-0 top-0 bottom-0 bg-white/10"
+        style={{ width: `${progress}%` }}
+      />
+      
+      <View className="flex-row items-center flex-1">
+        <View className="bg-white/20 rounded-xl p-2 mr-3">
+          <BookOpen size={20} color="#FAFAFA" strokeWidth={2} />
+        </View>
+        <View className="flex-1">
+          <Text className="text-primary-foreground font-black text-base">
+            Tiếp tục đọc
+          </Text>
+          <Text className="text-primary-foreground/90 text-sm font-medium" numberOfLines={1}>
+            {continueReading.chapter.title}
+          </Text>
+          <Text className="text-primary-foreground/70 text-xs mt-0.5 font-medium">
+            Trang {continueReading.currentPage}/{continueReading.totalPages} • {progress}%
+          </Text>
+        </View>
       </View>
-      <View className="bg-primary-foreground/20 rounded-full p-2">
-        <Feather name="play-circle" size={24} color="#F8FAFC" />
+      
+      <View className="bg-white/25 rounded-full p-3 ml-2">
+        <Play size={22} color="#FAFAFA" fill="#FAFAFA" strokeWidth={0} />
       </View>
     </TouchableOpacity>
   );

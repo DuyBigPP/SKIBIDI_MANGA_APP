@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
+import { BookOpen, Heart, History } from 'lucide-react-native';
 
 type TabType = 'reading' | 'bookmarks' | 'history';
 
@@ -8,51 +9,42 @@ interface LibraryTabsProps {
   onTabChange: (tab: TabType) => void;
 }
 
+const tabs = [
+  { id: 'reading' as TabType, label: 'Đang đọc', icon: BookOpen },
+  { id: 'bookmarks' as TabType, label: 'Yêu thích', icon: Heart },
+  { id: 'history' as TabType, label: 'Lịch sử', icon: History },
+];
+
 export const LibraryTabs: React.FC<LibraryTabsProps> = ({ activeTab, onTabChange }) => {
   return (
-    <View className="flex-row mb-6 bg-muted rounded-xl p-1">
-      <TouchableOpacity
-        onPress={() => onTabChange('reading')}
-        className={`flex-1 py-3 rounded-lg ${
-          activeTab === 'reading' ? 'bg-primary' : ''
-        }`}
-      >
-        <Text
-          className={`text-center font-semibold ${
-            activeTab === 'reading' ? 'text-primary-foreground' : 'text-muted-foreground'
-          }`}
-        >
-          Đang đọc
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => onTabChange('bookmarks')}
-        className={`flex-1 py-3 rounded-lg ${
-          activeTab === 'bookmarks' ? 'bg-primary' : ''
-        }`}
-      >
-        <Text
-          className={`text-center font-semibold ${
-            activeTab === 'bookmarks' ? 'text-primary-foreground' : 'text-muted-foreground'
-          }`}
-        >
-          Yêu thích
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => onTabChange('history')}
-        className={`flex-1 py-3 rounded-lg ${
-          activeTab === 'history' ? 'bg-primary' : ''
-        }`}
-      >
-        <Text
-          className={`text-center font-semibold ${
-            activeTab === 'history' ? 'text-primary-foreground' : 'text-muted-foreground'
-          }`}
-        >
-          Lịch sử
-        </Text>
-      </TouchableOpacity>
+    <View className="flex-row mb-6 bg-muted rounded-2xl p-1.5">
+      {tabs.map((tab) => {
+        const Icon = tab.icon;
+        const isActive = activeTab === tab.id;
+        return (
+          <TouchableOpacity
+            key={tab.id}
+            onPress={() => onTabChange(tab.id)}
+            className={`flex-1 py-3 rounded-xl flex-row items-center justify-center ${
+              isActive ? 'bg-primary' : ''
+            }`}
+            activeOpacity={0.7}
+          >
+            <Icon 
+              size={16} 
+              color={isActive ? '#FAFAFA' : '#71717A'} 
+              fill={isActive && tab.id === 'bookmarks' ? '#FAFAFA' : 'transparent'}
+            />
+            <Text
+              className={`ml-1.5 font-semibold text-sm ${
+                isActive ? 'text-white' : 'text-muted-foreground'
+              }`}
+            >
+              {tab.label}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
     </View>
   );
 };

@@ -1,21 +1,34 @@
-// Theme constants cho app - Dark Purple/Blue theme
+// Theme constants cho app - Enhanced Dark Purple/Gaming theme
 export const COLORS = {
-  // Dark mode colors (xanh tím)
-  primary: '#8B5CF6',        // Purple
+  // Dark mode colors (enhanced gaming/entertainment)
+  primary: '#A855F7',        // Vibrant Purple
+  primaryLight: '#C084FC',   // Light purple
+  primaryDark: '#7C3AED',    // Dark purple
   secondary: '#6366F1',      // Indigo
-  accent: '#818CF8',         // Light purple
-  background: '#0F172A',     // Dark blue-gray
-  surface: '#1E293B',        // Lighter dark
-  card: '#334155',           // Card background
-  text: '#E2E8F0',          // Light text
-  textSecondary: '#94A3B8',  // Muted text
-  border: '#475569',         // Border color
-  error: '#EF4444',          // Red
-  success: '#10B981',        // Green
-  white: '#FFFFFF',
-  black: '#000000',
+  accent: '#F472B6',         // Pink accent
+  accentPurple: '#C084FC',   // Purple accent
+  accentBlue: '#60A5FA',     // Blue accent
+  background: '#0A0A0F',     // Deep black for OLED
+  surface: '#12121A',        // Card surface
+  surfaceLight: '#1A1A24',   // Lighter surface
+  card: '#12121A',           // Card background
+  text: '#F1F5F9',           // Primary text
+  textSecondary: '#A1A1AA',  // Muted text
+  border: '#27272A',         // Subtle border
+  error: '#F43F5E',          // Rose red
+  success: '#22C55E',        // Bright green
+  warning: '#F59E0B',        // Amber
+  white: '#FAFAFA',
+  black: '#0A0A0F',
   
-  // Additional purple shades
+  // Gradient colors
+  gradient: {
+    start: '#A855F7',
+    middle: '#6366F1',
+    end: '#3B82F6',
+  },
+  
+  // Purple shades (updated)
   purple: {
     50: '#FAF5FF',
     100: '#F3E8FF',
@@ -24,7 +37,7 @@ export const COLORS = {
     400: '#C084FC',
     500: '#A855F7',
     600: '#9333EA',
-    700: '#7E22CE',
+    700: '#7C3AED',
     800: '#6B21A8',
     900: '#581C87',
   },
@@ -46,12 +59,14 @@ export const FONT_SIZES = {
   lg: 18,
   xl: 24,
   xxl: 32,
+  xxxl: 40,
 };
 
 export const BORDER_RADIUS = {
-  sm: 4,
-  md: 8,
-  lg: 12,
-  xl: 16,
+  sm: 6,
+  md: 10,
+  lg: 14,
+  xl: 18,
+  xxl: 24,
   full: 9999,
 };

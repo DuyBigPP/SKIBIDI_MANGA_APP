@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { Edit3, Shield, CheckCircle } from 'lucide-react-native';
 import { SafeImage } from '../../../components/SafeImage';
 import { User } from '../../../types/api.types';
 
@@ -11,74 +11,78 @@ interface ProfileHeaderProps {
 
 export const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user, onEditPress }) => {
   return (
-    <View className="items-center mb-6 mt-4">
-      {/* Avatar */}
-      {user?.avatar ? (
-        <SafeImage
-          uri={user.avatar}
-          style={{
-            width: 96,
-            height: 96,
-            borderRadius: 48,
-            marginBottom: 16,
-            backgroundColor: '#8B5CF6',
-            overflow: 'hidden',
-          }}
-          resizeMode="cover"
-          showLoadingIndicator={false}
-          fallbackIcon={false}
+    <View className="items-center mb-8 mt-4">
+      {/* Avatar with glow effect */}
+      <View className="relative mb-4">
+        <View 
+          className="absolute inset-0 bg-primary rounded-full opacity-30 blur-xl"
+          style={{ transform: [{ scale: 1.2 }] }}
         />
-      ) : (
-        <View className="bg-primary w-24 h-24 rounded-full mb-4 items-center justify-center">
-          {user?.username ? (
-            <Text className="text-5xl text-white">
-              {user.username.charAt(0).toUpperCase()}
-            </Text>
-          ) : (
-            <Feather name="user" size={48} color="#F8FAFC" />
-          )}
-        </View>
-      )}
+        {user?.avatar ? (
+          <SafeImage
+            uri={user.avatar}
+            style={{
+              width: 100,
+              height: 100,
+              borderRadius: 50,
+              backgroundColor: '#A855F7',
+              borderWidth: 3,
+              borderColor: '#A855F7',
+            }}
+            resizeMode="cover"
+            showLoadingIndicator={false}
+            fallbackIcon={false}
+          />
+        ) : (
+          <View className="bg-primary w-[100px] h-[100px] rounded-full items-center justify-center border-[3px] border-primary">
+            {user?.username ? (
+              <Text className="text-5xl font-bold text-white">
+                {user.username.charAt(0).toUpperCase()}
+              </Text>
+            ) : (
+              <Text className="text-4xl">👤</Text>
+            )}
+          </View>
+        )}
+        
+        {/* Status indicator */}
+        {user?.status === 'ACTIVE' && (
+          <View className="absolute bottom-1 right-1 bg-success rounded-full p-1 border-2 border-background">
+            <CheckCircle size={14} color="#FAFAFA" fill="#22C55E" />
+          </View>
+        )}
+      </View>
 
       {/* User Info */}
-      <Text className="text-2xl font-bold text-foreground mb-1">
+      <Text className="text-2xl font-black text-foreground mb-1">
         {user?.username || 'Người dùng'}
       </Text>
-      <Text className="text-muted-foreground text-sm mb-1">{user?.email}</Text>
+      <Text className="text-muted-foreground text-sm mb-3">{user?.email}</Text>
+
+      {/* Role Badge */}
+      <View className="flex-row items-center mb-4">
+        <View className={`rounded-full px-3 py-1.5 flex-row items-center ${
+          user?.role === 'ADMIN' ? 'bg-amber-500/20' : 'bg-primary/15'
+        }`}>
+          <Shield size={12} color={user?.role === 'ADMIN' ? '#F59E0B' : '#A855F7'} />
+          <Text className={`text-xs font-bold ml-1.5 ${
+            user?.role === 'ADMIN' ? 'text-amber-500' : 'text-primary'
+          }`}>
+            {user?.role === 'ADMIN' ? 'Quản trị viên' : 'Thành viên'}
+          </Text>
+        </View>
+      </View>
 
       {/* Edit Button */}
       {onEditPress && (
         <TouchableOpacity
           onPress={onEditPress}
-          className="bg-primary rounded-full px-6 py-2 flex-row items-center mt-3"
+          className="bg-muted border border-border/50 rounded-2xl px-6 py-3 flex-row items-center"
+          activeOpacity={0.7}
         >
-          <Feather name="edit-2" size={16} color="#F8FAFC" />
-          <Text className="text-primary-foreground font-semibold ml-2">Chỉnh sửa</Text>
+          <Edit3 size={16} color="#A1A1AA" />
+          <Text className="text-muted-foreground font-semibold ml-2">Chỉnh sửa hồ sơ</Text>
         </TouchableOpacity>
-      )}
-
-      {/* User Role Badge */}
-      <View className="bg-primary/20 rounded-full px-3 py-1 mt-2">
-        <Text className="text-primary text-xs font-semibold">
-          {user?.role === 'ADMIN' ? 'Quản trị viên' : 'Thành viên'}
-        </Text>
-      </View>
-
-      {/* Account Status */}
-      {user?.status && (
-        <View
-          className={`mt-2 rounded-full px-3 py-1 ${
-            user.status === 'ACTIVE' ? 'bg-green-500/20' : 'bg-red-500/20'
-          }`}
-        >
-          <Text
-            className={`text-xs font-semibold ${
-              user.status === 'ACTIVE' ? 'text-green-500' : 'text-red-500'
-            }`}
-          >
-            {user.status === 'ACTIVE' ? 'Hoạt động' : 'Không hoạt động'}
-          </Text>
-        </View>
       )}
     </View>
   );

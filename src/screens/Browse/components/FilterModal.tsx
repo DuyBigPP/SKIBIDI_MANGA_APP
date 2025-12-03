@@ -1,7 +1,6 @@
 import React from 'react';
 import { Modal, View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { Feather } from '@expo/vector-icons';
-import { RefreshCw, Check, Pause, X, Flame, Sparkles, Type, FileText, Theater } from 'lucide-react-native';
+import { X, Check, RefreshCw, Pause, Flame, Sparkles, Type, FileText, Theater } from 'lucide-react-native';
 import { Genre } from '../../../types/api.types';
 
 type SortOption = 'updatedAt' | 'createdAt' | 'title';
@@ -69,42 +68,50 @@ export const FilterModal: React.FC<FilterModalProps> = ({
       transparent={true}
       onRequestClose={onClose}
     >
-      <View className="flex-1 justify-end bg-black/50">
-        <View className="bg-background rounded-t-3xl max-h-[80%]">
+      <View className="flex-1 justify-end bg-black/60">
+        <View className="bg-background rounded-t-3xl max-h-[85%] border-t border-border/30">
           {/* Modal Header */}
-          <View className="flex-row items-center justify-between p-4 border-b border-border">
-            <Text className="text-xl font-bold text-foreground">Bộ lọc</Text>
-            <TouchableOpacity onPress={onClose}>
-              <Feather name="x" size={24} color="#F8FAFC" />
+          <View className="flex-row items-center justify-between p-5 border-b border-border/30">
+            <Text className="text-xl font-black text-foreground">Bộ lọc</Text>
+            <TouchableOpacity 
+              onPress={onClose}
+              className="bg-muted rounded-xl p-2"
+              activeOpacity={0.7}
+            >
+              <X size={22} color="#FAFAFA" strokeWidth={2} />
             </TouchableOpacity>
           </View>
 
-          <ScrollView className="p-4">
+          <ScrollView className="p-5">
             {/* Sort Section */}
             <View className="mb-6">
-              <Text className="text-base font-bold text-foreground mb-3">Sắp xếp</Text>
+              <Text className="text-base font-black text-foreground mb-4">Sắp xếp</Text>
               {sortOptions.map((option) => {
                 const IconComponent = option.iconComponent;
+                const isActive = sortBy === option.value;
                 return (
                   <TouchableOpacity
                     key={option.value}
                     onPress={() => handleSortSelect(option.value)}
-                    className={`flex-row items-center justify-between p-4 rounded-xl mb-2 ${
-                      sortBy === option.value ? 'bg-primary' : 'bg-card border border-border'
+                    className={`flex-row items-center justify-between p-4 rounded-2xl mb-2.5 ${
+                      isActive ? 'bg-primary' : 'bg-surface border border-border/30'
                     }`}
+                    activeOpacity={0.7}
                   >
                     <View className="flex-row items-center">
-                      <IconComponent size={24} color={sortBy === option.value ? '#F8FAFC' : '#8B5CF6'} strokeWidth={2} />
+                      <View className={`rounded-xl p-2 ${isActive ? 'bg-white/20' : 'bg-primary/20'}`}>
+                        <IconComponent size={20} color={isActive ? '#FAFAFA' : '#A855F7'} strokeWidth={2} />
+                      </View>
                       <Text
-                        className={`font-semibold ml-3 ${
-                          sortBy === option.value ? 'text-primary-foreground' : 'text-foreground'
+                        className={`font-bold ml-3 ${
+                          isActive ? 'text-primary-foreground' : 'text-foreground'
                         }`}
                       >
                         {option.label}
                       </Text>
                     </View>
-                    {sortBy === option.value && (
-                      <Feather name="check" size={20} color="#F8FAFC" />
+                    {isActive && (
+                      <Check size={20} color="#FAFAFA" strokeWidth={2.5} />
                     )}
                   </TouchableOpacity>
                 );
@@ -113,47 +120,54 @@ export const FilterModal: React.FC<FilterModalProps> = ({
 
             {/* Status Section */}
             <View className="mb-6">
-              <Text className="text-base font-bold text-foreground mb-3">Trạng thái</Text>
+              <Text className="text-base font-black text-foreground mb-4">Trạng thái</Text>
               <TouchableOpacity
                 onPress={() => handleStatusSelect(null)}
-                className={`flex-row items-center justify-between p-4 rounded-xl mb-2 ${
-                  !selectedStatus ? 'bg-primary' : 'bg-card border border-border'
+                className={`flex-row items-center justify-between p-4 rounded-2xl mb-2.5 ${
+                  !selectedStatus ? 'bg-primary' : 'bg-surface border border-border/30'
                 }`}
+                activeOpacity={0.7}
               >
                 <View className="flex-row items-center">
-                  <FileText size={24} color={!selectedStatus ? '#F8FAFC' : '#8B5CF6'} strokeWidth={2} />
+                  <View className={`rounded-xl p-2 ${!selectedStatus ? 'bg-white/20' : 'bg-primary/20'}`}>
+                    <FileText size={20} color={!selectedStatus ? '#FAFAFA' : '#A855F7'} strokeWidth={2} />
+                  </View>
                   <Text
-                    className={`font-semibold ml-3 ${
+                    className={`font-bold ml-3 ${
                       !selectedStatus ? 'text-primary-foreground' : 'text-foreground'
                     }`}
                   >
                     Tất cả
                   </Text>
                 </View>
-                {!selectedStatus && <Feather name="check" size={20} color="#F8FAFC" />}
+                {!selectedStatus && <Check size={20} color="#FAFAFA" strokeWidth={2.5} />}
               </TouchableOpacity>
               {statusOptions.map((option) => {
                 const IconComponent = option.iconComponent;
+                const isActive = selectedStatus === option.value;
                 return (
                   <TouchableOpacity
                     key={option.value}
                     onPress={() => handleStatusSelect(option.value)}
-                    className={`flex-row items-center justify-between p-4 rounded-xl mb-2 ${
-                      selectedStatus === option.value ? 'bg-primary' : 'bg-card border border-border'
+                    className={`flex-row items-center justify-between p-4 rounded-2xl mb-2.5 ${
+                      isActive ? 'bg-primary' : 'bg-surface border border-border/30'
                     }`}
+                    activeOpacity={0.7}
                   >
                     <View className="flex-row items-center">
-                      <IconComponent size={24} color={selectedStatus === option.value ? '#F8FAFC' : '#8B5CF6'} strokeWidth={2} />
+                      <View className={`rounded-xl p-2 ${isActive ? 'bg-white/20' : 'bg-primary/20'}`}>
+                        <IconComponent size={20} color={isActive ? '#FAFAFA' : '#A855F7'} strokeWidth={2} />
+                      </View>
                       <Text
-                        className={`font-semibold ml-3 ${
-                          selectedStatus === option.value ? 'text-primary-foreground' : 'text-foreground'
+                        className={`font-bold ml-3 ${
+                          isActive ? 'text-primary-foreground' : 'text-foreground'
                         }`}
                       >
                         {option.label}
                       </Text>
                     </View>
-                    {selectedStatus === option.value && (
-                      <Feather name="check" size={20} color="#F8FAFC" />
+                    {isActive && (
+                      <Check size={20} color="#FAFAFA" strokeWidth={2.5} />
                     )}
                   </TouchableOpacity>
                 );
@@ -162,50 +176,59 @@ export const FilterModal: React.FC<FilterModalProps> = ({
 
             {/* Genre Section */}
             <View className="mb-6">
-              <Text className="text-base font-bold text-foreground mb-3">Thể loại</Text>
+              <Text className="text-base font-black text-foreground mb-4">Thể loại</Text>
               {genresLoading ? (
-                <ActivityIndicator color="#8B5CF6" />
+                <View className="py-8 items-center">
+                  <ActivityIndicator color="#A855F7" />
+                </View>
               ) : (
                 <>
                   <TouchableOpacity
                     onPress={() => handleGenreSelect(null)}
-                    className={`flex-row items-center justify-between p-4 rounded-xl mb-2 ${
-                      !selectedGenre ? 'bg-primary' : 'bg-card border border-border'
+                    className={`flex-row items-center justify-between p-4 rounded-2xl mb-3 ${
+                      !selectedGenre ? 'bg-primary' : 'bg-surface border border-border/30'
                     }`}
+                    activeOpacity={0.7}
                   >
                     <View className="flex-row items-center">
-                      <Theater size={24} color={!selectedGenre ? '#F8FAFC' : '#8B5CF6'} strokeWidth={2} />
+                      <View className={`rounded-xl p-2 ${!selectedGenre ? 'bg-white/20' : 'bg-primary/20'}`}>
+                        <Theater size={20} color={!selectedGenre ? '#FAFAFA' : '#A855F7'} strokeWidth={2} />
+                      </View>
                       <Text
-                        className={`font-semibold ml-3 ${
+                        className={`font-bold ml-3 ${
                           !selectedGenre ? 'text-primary-foreground' : 'text-foreground'
                         }`}
                       >
-                        Tất cả
+                        Tất cả thể loại
                       </Text>
                     </View>
-                    {!selectedGenre && <Feather name="check" size={20} color="#F8FAFC" />}
+                    {!selectedGenre && <Check size={20} color="#FAFAFA" strokeWidth={2.5} />}
                   </TouchableOpacity>
-                  <ScrollView className="max-h-80">
+                  <ScrollView className="max-h-64">
                     <View className="flex-row flex-wrap">
-                      {genres.map((genre) => (
-                        <TouchableOpacity
-                          key={genre.id}
-                          onPress={() => handleGenreSelect(genre.slug)}
-                          className={`rounded-full px-4 py-2 mr-2 mb-2 ${
-                            selectedGenre === genre.slug
-                              ? 'bg-primary border border-primary'
-                              : 'bg-card border border-border'
-                          }`}
-                        >
-                          <Text
-                            className={`text-sm font-semibold ${
-                              selectedGenre === genre.slug ? 'text-primary-foreground' : 'text-foreground'
+                      {genres.map((genre) => {
+                        const isActive = selectedGenre === genre.slug;
+                        return (
+                          <TouchableOpacity
+                            key={genre.id}
+                            onPress={() => handleGenreSelect(genre.slug)}
+                            className={`rounded-xl px-4 py-2.5 mr-2 mb-2.5 ${
+                              isActive
+                                ? 'bg-primary'
+                                : 'bg-surface border border-border/30'
                             }`}
+                            activeOpacity={0.7}
                           >
-                            {genre.name}
-                          </Text>
-                        </TouchableOpacity>
-                      ))}
+                            <Text
+                              className={`text-sm font-bold ${
+                                isActive ? 'text-primary-foreground' : 'text-foreground'
+                              }`}
+                            >
+                              {genre.name}
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      })}
                     </View>
                   </ScrollView>
                 </>
@@ -214,21 +237,30 @@ export const FilterModal: React.FC<FilterModalProps> = ({
           </ScrollView>
 
           {/* Footer Actions */}
-          <View className="p-4 border-t border-border flex-row">
+          <View className="p-5 border-t border-border/30 flex-row">
             <TouchableOpacity
               onPress={() => {
                 onClearFilters();
                 onClose();
               }}
-              className="flex-1 bg-card border border-border rounded-xl p-4 mr-2"
+              className="flex-1 bg-surface border border-border/30 rounded-2xl p-4 mr-3"
+              activeOpacity={0.7}
             >
-              <Text className="text-foreground font-semibold text-center">Xóa bộ lọc</Text>
+              <Text className="text-foreground font-bold text-center">Xóa bộ lọc</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={onClose}
-              className="flex-1 bg-primary rounded-xl p-4"
+              className="flex-1 bg-primary rounded-2xl p-4"
+              activeOpacity={0.8}
+              style={{
+                shadowColor: '#A855F7',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.3,
+                shadowRadius: 8,
+                elevation: 6,
+              }}
             >
-              <Text className="text-primary-foreground font-semibold text-center">Áp dụng</Text>
+              <Text className="text-primary-foreground font-black text-center">Áp dụng</Text>
             </TouchableOpacity>
           </View>
         </View>

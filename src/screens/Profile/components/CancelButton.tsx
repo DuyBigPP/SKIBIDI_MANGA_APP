@@ -1,6 +1,6 @@
 import React from 'react';
-import { TouchableOpacity, Text } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { TouchableOpacity, Text, View } from 'react-native';
+import { X } from 'lucide-react-native';
 
 interface CancelButtonProps {
   onPress: () => void;
@@ -12,10 +12,13 @@ export const CancelButton: React.FC<CancelButtonProps> = ({ onPress, disabled })
     <TouchableOpacity
       onPress={onPress}
       disabled={disabled}
-      className="border border-border rounded-xl p-4 mt-3 flex-row items-center justify-center"
+      className="bg-surface border border-border/30 rounded-2xl p-4 mt-3 flex-row items-center justify-center"
+      activeOpacity={0.7}
     >
-      <Feather name="x" size={20} color="#94A3B8" />
-      <Text className="text-muted-foreground font-semibold text-center text-base ml-2">Hủy</Text>
+      <View className="bg-muted rounded-lg p-1.5">
+        <X size={16} color="#64748B" strokeWidth={2.5} />
+      </View>
+      <Text className="text-muted-foreground font-bold text-center text-base ml-2">Hủy</Text>
     </TouchableOpacity>
   );
 };

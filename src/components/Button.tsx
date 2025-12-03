@@ -27,11 +27,11 @@ export const Button = ({
       case 'primary':
         return 'bg-primary active:bg-primary/90';
       case 'secondary':
-        return 'bg-secondary active:bg-secondary/90';
+        return 'bg-surface border border-border/30 active:bg-muted';
       case 'outline':
         return 'bg-transparent border-2 border-primary';
       case 'danger':
-        return 'bg-destructive active:bg-destructive/90';
+        return 'bg-rose-500 active:bg-rose-600';
       default:
         return 'bg-primary';
     }
@@ -40,13 +40,13 @@ export const Button = ({
   const getSizeClasses = () => {
     switch (size) {
       case 'sm':
-        return 'px-4 py-2';
+        return 'px-4 py-2.5';
       case 'md':
-        return 'px-6 py-3';
+        return 'px-6 py-3.5';
       case 'lg':
         return 'px-8 py-4';
       default:
-        return 'px-6 py-3';
+        return 'px-6 py-3.5';
     }
   };
 
@@ -57,9 +57,9 @@ export const Button = ({
       case 'primary':
         return 'text-primary-foreground';
       case 'secondary':
-        return 'text-secondary-foreground';
+        return 'text-foreground';
       case 'danger':
-        return 'text-destructive-foreground';
+        return 'text-white';
       default:
         return 'text-primary-foreground';
     }
@@ -78,20 +78,35 @@ export const Button = ({
     }
   };
 
+  const getShadowStyle = () => {
+    if (variant === 'primary') {
+      return {
+        shadowColor: '#A855F7',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 6,
+      };
+    }
+    return {};
+  };
+
   return (
     <TouchableOpacity
       onPress={onPress}
       disabled={disabled || loading}
-      className={`rounded-xl ${getSizeClasses()} ${getVariantClasses()} ${
+      className={`rounded-2xl ${getSizeClasses()} ${getVariantClasses()} ${
         fullWidth ? 'w-full' : ''
       } ${disabled ? 'opacity-50' : ''} flex-row items-center justify-center`}
+      style={getShadowStyle()}
+      activeOpacity={0.8}
     >
       {loading ? (
-        <ActivityIndicator color={variant === 'outline' ? '#2563EB' : '#FFFFFF'} />
+        <ActivityIndicator color={variant === 'outline' ? '#A855F7' : '#FFFFFF'} />
       ) : (
         <View className="flex-row items-center">
           {icon && <Text className="mr-2 text-lg">{icon}</Text>}
-          <Text className={`${getTextColor()} ${getTextSize()} font-semibold`}>
+          <Text className={`${getTextColor()} ${getTextSize()} font-bold`}>
             {title}
           </Text>
         </View>

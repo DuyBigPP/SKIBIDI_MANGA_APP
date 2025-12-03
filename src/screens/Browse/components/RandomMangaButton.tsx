@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, ActivityIndicator, View } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { Shuffle, Sparkles } from 'lucide-react-native';
 
 interface RandomMangaButtonProps {
   onPress: () => void;
@@ -12,17 +12,22 @@ export const RandomMangaButton: React.FC<RandomMangaButtonProps> = ({ onPress, l
     <TouchableOpacity
       onPress={onPress}
       disabled={loading}
-      className="mb-4 bg-primary rounded-xl p-3 flex-row items-center self-start"
+      className="mb-5 bg-gradient-to-r from-primary to-secondary rounded-2xl p-4 flex-row items-center border border-primary/30"
+      style={{ backgroundColor: '#7C3AED' }}
+      activeOpacity={0.85}
     >
       {loading ? (
-        <ActivityIndicator size="small" color="#F8FAFC" />
+        <ActivityIndicator size="small" color="#FAFAFA" />
       ) : (
         <>
-          <Feather name="shuffle" size={18} color="#F8FAFC" />
-          <View className="ml-2">
-            <Text className="text-white text-xs opacity-80">Không biết đọc gì?</Text>
-            <Text className="text-white font-semibold text-sm">Manga ngẫu nhiên</Text>
+          <View className="bg-white/20 rounded-xl p-2 mr-3">
+            <Shuffle size={20} color="#FAFAFA" />
           </View>
+          <View className="flex-1">
+            <Text className="text-white/70 text-xs">Không biết đọc gì?</Text>
+            <Text className="text-white font-bold text-base">Thử manga ngẫu nhiên</Text>
+          </View>
+          <Sparkles size={20} color="#FAFAFA" />
         </>
       )}
     </TouchableOpacity>

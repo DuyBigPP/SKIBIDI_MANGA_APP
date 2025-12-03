@@ -14,7 +14,7 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
-import { BookOpen } from 'lucide-react-native';
+import { BookOpen, User, Mail, Lock, KeyRound } from 'lucide-react-native';
 import { useAuth } from '../../contexts/AuthContext';
 
 interface RegisterScreenProps {
@@ -74,83 +74,113 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
         <View className="flex-1 justify-center px-6 py-8">
           {/* Logo/Title */}
           <View className="items-center mb-8">
-            <BookOpen size={64} color="#8B5CF6" strokeWidth={2} />
-            <Text className="text-3xl font-bold text-foreground mt-2">Đăng ký</Text>
-            <Text className="text-muted-foreground mt-2">Tạo tài khoản mới</Text>
+            <View className="bg-primary/20 rounded-3xl p-4 mb-4">
+              <BookOpen size={48} color="#A855F7" strokeWidth={2} />
+            </View>
+            <Text className="text-3xl font-black text-foreground">Đăng ký</Text>
+            <Text className="text-muted-foreground mt-2 font-medium">Tạo tài khoản mới</Text>
           </View>
 
           {/* Register Form */}
           <View className="mb-4">
-            <Text className="text-sm font-semibold text-foreground mb-2">Tên người dùng</Text>
-            <TextInput
-              className="bg-card border border-border rounded-xl p-4 text-foreground"
-              placeholder="Nhập tên người dùng"
-              placeholderTextColor="#94A3B8"
-              value={username}
-              onChangeText={setUsername}
-              autoCapitalize="none"
-              editable={!loading}
-            />
+            <Text className="text-sm font-bold text-foreground mb-2">Tên người dùng</Text>
+            <View className="relative">
+              <View className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
+                <User size={18} color="#64748B" strokeWidth={2} />
+              </View>
+              <TextInput
+                className="bg-surface border border-border/30 rounded-2xl p-4 pl-12 text-foreground font-medium"
+                placeholder="Nhập tên người dùng"
+                placeholderTextColor="#64748B"
+                value={username}
+                onChangeText={setUsername}
+                autoCapitalize="none"
+                editable={!loading}
+              />
+            </View>
           </View>
 
           <View className="mb-4">
-            <Text className="text-sm font-semibold text-foreground mb-2">Email</Text>
-            <TextInput
-              className="bg-card border border-border rounded-xl p-4 text-foreground"
-              placeholder="example@email.com"
-              placeholderTextColor="#94A3B8"
-              value={email}
-              onChangeText={setEmail}
-              autoCapitalize="none"
-              keyboardType="email-address"
-              editable={!loading}
-            />
+            <Text className="text-sm font-bold text-foreground mb-2">Email</Text>
+            <View className="relative">
+              <View className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
+                <Mail size={18} color="#64748B" strokeWidth={2} />
+              </View>
+              <TextInput
+                className="bg-surface border border-border/30 rounded-2xl p-4 pl-12 text-foreground font-medium"
+                placeholder="example@email.com"
+                placeholderTextColor="#64748B"
+                value={email}
+                onChangeText={setEmail}
+                autoCapitalize="none"
+                keyboardType="email-address"
+                editable={!loading}
+              />
+            </View>
           </View>
 
           <View className="mb-4">
-            <Text className="text-sm font-semibold text-foreground mb-2">Mật khẩu</Text>
-            <TextInput
-              className="bg-card border border-border rounded-xl p-4 text-foreground"
-              placeholder="••••••••"
-              placeholderTextColor="#94A3B8"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              editable={!loading}
-            />
+            <Text className="text-sm font-bold text-foreground mb-2">Mật khẩu</Text>
+            <View className="relative">
+              <View className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
+                <Lock size={18} color="#64748B" strokeWidth={2} />
+              </View>
+              <TextInput
+                className="bg-surface border border-border/30 rounded-2xl p-4 pl-12 text-foreground font-medium"
+                placeholder="••••••••"
+                placeholderTextColor="#64748B"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+                editable={!loading}
+              />
+            </View>
           </View>
 
           <View className="mb-6">
-            <Text className="text-sm font-semibold text-foreground mb-2">Xác nhận mật khẩu</Text>
-            <TextInput
-              className="bg-card border border-border rounded-xl p-4 text-foreground"
-              placeholder="••••••••"
-              placeholderTextColor="#94A3B8"
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
-              secureTextEntry
-              editable={!loading}
-            />
+            <Text className="text-sm font-bold text-foreground mb-2">Xác nhận mật khẩu</Text>
+            <View className="relative">
+              <View className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
+                <KeyRound size={18} color="#64748B" strokeWidth={2} />
+              </View>
+              <TextInput
+                className="bg-surface border border-border/30 rounded-2xl p-4 pl-12 text-foreground font-medium"
+                placeholder="••••••••"
+                placeholderTextColor="#64748B"
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                secureTextEntry
+                editable={!loading}
+              />
+            </View>
           </View>
 
           {/* Register Button */}
           <TouchableOpacity
-            className={`bg-primary rounded-xl p-4 items-center mb-4 ${loading ? 'opacity-50' : ''}`}
+            className={`bg-primary rounded-2xl p-4 items-center mb-5 ${loading ? 'opacity-50' : ''}`}
             onPress={handleRegister}
             disabled={loading}
+            activeOpacity={0.8}
+            style={{
+              shadowColor: '#A855F7',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.3,
+              shadowRadius: 8,
+              elevation: 6,
+            }}
           >
             {loading ? (
-              <ActivityIndicator color="#F8FAFC" />
+              <ActivityIndicator color="#FAFAFA" />
             ) : (
-              <Text className="text-primary-foreground font-bold text-base">Đăng ký</Text>
+              <Text className="text-primary-foreground font-black text-base">Đăng ký</Text>
             )}
           </TouchableOpacity>
 
           {/* Login Link */}
           <View className="flex-row justify-center">
-            <Text className="text-muted-foreground">Đã có tài khoản? </Text>
+            <Text className="text-muted-foreground font-medium">Đã có tài khoản? </Text>
             <TouchableOpacity onPress={onSwitchToLogin} disabled={loading}>
-              <Text className="text-primary font-semibold">Đăng nhập</Text>
+              <Text className="text-primary font-bold">Đăng nhập</Text>
             </TouchableOpacity>
           </View>
         </View>

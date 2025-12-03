@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { ArrowUp } from 'lucide-react-native';
 
 interface ScrollToTopButtonProps {
   visible: boolean;
@@ -13,10 +13,17 @@ export const ScrollToTopButton: React.FC<ScrollToTopButtonProps> = ({ visible, o
   return (
     <TouchableOpacity
       onPress={onPress}
-      className="absolute right-4 bottom-24 bg-primary rounded-full p-3 shadow-lg"
-      style={{ elevation: 5 }}
+      className="absolute right-4 bottom-28 bg-primary rounded-2xl p-3.5"
+      style={{ 
+        elevation: 8,
+        shadowColor: '#A855F7',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+      }}
+      activeOpacity={0.8}
     >
-      <Feather name="arrow-up" size={24} color="#FFFFFF" />
+      <ArrowUp size={22} color="#FFFFFF" strokeWidth={2.5} />
     </TouchableOpacity>
   );
 };

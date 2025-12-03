@@ -21,9 +21,13 @@ export const MangaCard = ({
   onPress,
 }: MangaCardProps) => {
   return (
-    <TouchableOpacity onPress={onPress} className="mb-4">
+    <TouchableOpacity 
+      onPress={onPress} 
+      className="mb-4"
+      activeOpacity={0.7}
+    >
       {/* Cover Image */}
-      <View className="bg-gray-200 rounded-xl h-56 mb-2 overflow-hidden">
+      <View className="bg-surface rounded-2xl h-56 mb-3 overflow-hidden border border-border/20">
         {coverImage ? (
           <SafeImage 
             uri={coverImage}
@@ -32,32 +36,34 @@ export const MangaCard = ({
             showLoadingIndicator={false}
           />
         ) : (
-          <View className="w-full h-full items-center justify-center">
-            <BookOpen size={48} color="#94A3B8" strokeWidth={1.5} />
+          <View className="w-full h-full items-center justify-center bg-muted">
+            <BookOpen size={48} color="#64748B" strokeWidth={1.5} />
           </View>
         )}
       </View>
 
       {/* Info */}
       <View>
-        <Text className="font-bold text-gray-900 text-base mb-1" numberOfLines={2}>
+        <Text className="font-bold text-foreground text-base mb-1" numberOfLines={2}>
           {title}
         </Text>
         
         {author && (
-          <Text className="text-gray-600 text-sm mb-1" numberOfLines={1}>
+          <Text className="text-muted-foreground text-sm mb-1 font-medium" numberOfLines={1}>
             {author}
           </Text>
         )}
 
         <View className="flex-row items-center">
           {rating && (
-            <Text className="text-yellow-500 text-sm mr-2">
-              ⭐ {rating.toFixed(1)}
-            </Text>
+            <View className="flex-row items-center bg-amber-500/20 rounded-lg px-2 py-0.5 mr-2">
+              <Text className="text-amber-500 text-xs font-bold">
+                ⭐ {rating.toFixed(1)}
+              </Text>
+            </View>
           )}
           {chapter && (
-            <Text className="text-gray-600 text-sm">
+            <Text className="text-muted-foreground text-sm font-medium">
               {chapter}
             </Text>
           )}
