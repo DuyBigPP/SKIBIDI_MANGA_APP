@@ -1,7 +1,3 @@
-/**
- * API Client - Base HTTP client with Axios
- */
-
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import { BASE_URL } from '../../endpoint/endpoint';
 
