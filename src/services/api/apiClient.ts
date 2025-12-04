@@ -1,9 +1,11 @@
 /**
- * API Client - Base HTTP client with error handling
+ * API Client - Base HTTP client with Axios
  */
 
+import axios, { AxiosInstance, AxiosError } from 'axios';
 import { BASE_URL } from '../../endpoint/endpoint';
-const TIMEOUT = 30000; // 30 seconds
+
+const TIMEOUT = 30000;
 
 export class ApiError extends Error {
   constructor(
@@ -17,13 +19,32 @@ export class ApiError extends Error {
 }
 
 class ApiClient {
-  private baseURL: string;
-  private timeout: number;
+  private client: AxiosInstance;
   private token: string | null = null;
 
   constructor(baseURL: string = BASE_URL, timeout: number = TIMEOUT) {
-    this.baseURL = baseURL;
-    this.timeout = timeout;
+    this.client = axios.create({
+      baseURL,
+      timeout,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    // error interceptor
+    this.client.interceptors.response.use(
+      (response) => response,
+      (error: AxiosError) => {
+        const message = (error.response?.data as any)?.message || error.message || 'Request failed';
+        throw new ApiError(message, error.response?.status, error.response?.data);
+      }
+    );
+
+    // Request interceptor for auth token
+    this.client.interceptors.request.use((config) => {
+      if (this.token) {
+        config.headers.Authorization = `Bearer ${this.token}`;
+      }
+      return config;
+    });
   }
 
   setToken(token: string | null) {
@@ -34,180 +55,43 @@ class ApiClient {
     return this.token;
   }
 
-  private async fetchWithTimeout(
-    url: string,
-    options: RequestInit = {}
-  ): Promise<Response> {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), this.timeout);
-
-    try {
-      const response = await fetch(url, {
-        ...options,
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeoutId);
-      return response;
-    } catch (error) {
-      clearTimeout(timeoutId);
-      if (error instanceof Error && error.name === 'AbortError') {
-        throw new ApiError('Request timeout');
-      }
-      throw error;
-    }
+  async get<T>(endpoint: string): Promise<T> {
+    const { data } = await this.client.get<T>(endpoint);
+    return data;
   }
 
-  private async handleResponse<T>(response: Response): Promise<T> {
-    if (!response.ok) {
-      let errorData: any = {};
-      try {
-        errorData = await response.json();
-      } catch {
-        // If JSON parsing fails, use default error
-      }
-
-      throw new ApiError(
-        errorData.message || `HTTP Error ${response.status}`,
-        response.status,
-        errorData
-      );
-    }
-
-    return response.json();
+  async post<T>(endpoint: string, body?: any): Promise<T> {
+    const { data } = await this.client.post<T>(endpoint, body);
+    return data;
   }
 
-  private getHeaders(customHeaders?: Record<string, string>): Record<string, string> {
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-      ...customHeaders,
-    };
-
-    if (this.token) {
-      headers['Authorization'] = `Bearer ${this.token}`;
-    }
-
-    return headers;
+  async put<T>(endpoint: string, body?: any): Promise<T> {
+    const { data } = await this.client.put<T>(endpoint, body);
+    return data;
   }
 
-  async get<T>(endpoint: string, headers?: Record<string, string>): Promise<T> {
-    const url = `${this.baseURL}${endpoint}`;
-    const response = await this.fetchWithTimeout(url, {
-      method: 'GET',
-      headers: this.getHeaders(headers),
+  async patch<T>(endpoint: string, body?: any): Promise<T> {
+    const { data } = await this.client.patch<T>(endpoint, body);
+    return data;
+  }
+
+  async delete<T>(endpoint: string): Promise<T> {
+    const { data } = await this.client.delete<T>(endpoint);
+    return data;
+  }
+
+  async postFormData<T>(endpoint: string, formData: FormData): Promise<T> {
+    const { data } = await this.client.post<T>(endpoint, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
     });
-
-    return this.handleResponse<T>(response);
+    return data;
   }
 
-  async post<T>(
-    endpoint: string,
-    data?: any,
-    headers?: Record<string, string>
-  ): Promise<T> {
-    const url = `${this.baseURL}${endpoint}`;
-    const response = await this.fetchWithTimeout(url, {
-      method: 'POST',
-      headers: this.getHeaders(headers),
-      body: data ? JSON.stringify(data) : undefined,
+  async putFormData<T>(endpoint: string, formData: FormData): Promise<T> {
+    const { data } = await this.client.put<T>(endpoint, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
     });
-
-    return this.handleResponse<T>(response);
-  }
-
-  async put<T>(
-    endpoint: string,
-    data?: any,
-    headers?: Record<string, string>
-  ): Promise<T> {
-    const url = `${this.baseURL}${endpoint}`;
-    const response = await this.fetchWithTimeout(url, {
-      method: 'PUT',
-      headers: this.getHeaders(headers),
-      body: data ? JSON.stringify(data) : undefined,
-    });
-
-    return this.handleResponse<T>(response);
-  }
-
-  async delete<T>(endpoint: string, headers?: Record<string, string>): Promise<T> {
-    const url = `${this.baseURL}${endpoint}`;
-    const response = await this.fetchWithTimeout(url, {
-      method: 'DELETE',
-      headers: this.getHeaders(headers),
-    });
-
-    return this.handleResponse<T>(response);
-  }
-
-  async patch<T>(
-    endpoint: string,
-    data?: any,
-    headers?: Record<string, string>
-  ): Promise<T> {
-    const url = `${this.baseURL}${endpoint}`;
-    const response = await this.fetchWithTimeout(url, {
-      method: 'PATCH',
-      headers: this.getHeaders(headers),
-      body: data ? JSON.stringify(data) : undefined,
-    });
-
-    return this.handleResponse<T>(response);
-  }
-
-  async postFormData<T>(
-    endpoint: string,
-    formData: FormData,
-    headers?: Record<string, string>
-  ): Promise<T> {
-    const url = `${this.baseURL}${endpoint}`;
-    
-    // Don't set Content-Type for FormData - browser will set it with boundary
-    const customHeaders: Record<string, string> = { ...headers };
-    if (this.token) {
-      customHeaders['Authorization'] = `Bearer ${this.token}`;
-    }
-    
-    const response = await this.fetchWithTimeout(url, {
-      method: 'POST',
-      headers: customHeaders,
-      body: formData,
-    });
-
-    return this.handleResponse<T>(response);
-  }
-
-  async putFormData<T>(
-    endpoint: string,
-    formData: FormData,
-    headers?: Record<string, string>
-  ): Promise<T> {
-    const url = `${this.baseURL}${endpoint}`;
-    
-    // Don't set Content-Type for FormData - browser/React Native will set it with boundary
-    const customHeaders: Record<string, string> = { ...headers };
-    if (this.token) {
-      customHeaders['Authorization'] = `Bearer ${this.token}`;
-    }
-    
-    console.log('🔼 PUT FormData to:', url);
-    console.log('📋 FormData contents:', formData);
-    
-    const response = await this.fetchWithTimeout(url, {
-      method: 'PUT',
-      headers: customHeaders,
-      body: formData,
-    });
-
-    console.log('📡 Response status:', response.status);
-    console.log('📡 Response headers:', {
-      contentType: response.headers.get('content-type'),
-    });
-    
-    const result = await this.handleResponse<T>(response);
-    console.log('✅ Response data received');
-    
-    return result;
+    return data;
   }
 }
 
