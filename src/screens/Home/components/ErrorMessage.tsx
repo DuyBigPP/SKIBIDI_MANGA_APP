@@ -19,7 +19,7 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = ({
   return (
     <View className="bg-destructive/20 border border-destructive/30 rounded-xl p-4 mb-6">
       <Text className="text-destructive font-semibold mb-1">
-        {isServerBusy ? '⏱️ Server đang bận' : '⚠️ Không thể kết nối'}
+        {isServerBusy ? '⏱️ Server đang bậnn' : '⚠️ Không thể kết nối'}
       </Text>
       <Text className="text-destructive/80 text-sm mb-3">{error}</Text>
       <TouchableOpacity
