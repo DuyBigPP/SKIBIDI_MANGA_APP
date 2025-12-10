@@ -50,7 +50,7 @@ export const Header = ({
           )}
         </View>
 
-        {/* Right Icon */}
+        {/* Right Icons */}
         {rightIcon ? (
           <TouchableOpacity 
             onPress={onRightPress} 

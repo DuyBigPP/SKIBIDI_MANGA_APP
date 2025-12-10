@@ -58,7 +58,7 @@ export const LibraryScreen: React.FC<LibraryScreenProps> = ({
 
   const handleClearHistory = () => {
     Alert.alert(
-      'Xóa lịch sử',
+      'Xóa lịch sử đọc truyện',
       'Bạn có chắc muốn xóa toàn bộ lịch sử đọc?',
       [
         { text: 'Hủy', style: 'cancel' },
